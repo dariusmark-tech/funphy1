@@ -64,9 +64,9 @@ function Dashboard() {
         {/* Hero status card */}
         <div className="glass relative overflow-hidden rounded-2xl p-6 md:col-span-2">
           <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-[var(--neon)]/15 blur-3xl" />
-          <p className="text-xs uppercase tracking-wider text-muted-foreground">Welcome back</p>
+          <p className="text-xs uppercase tracking-wider text-muted-foreground">Welcome back, player</p>
           <h1 className="mt-1 text-3xl font-black">
-            {profile.display_name || "Climber"}
+            {profile.display_name || "Player"}
           </h1>
           <div className="mt-6">
             <div className="flex items-baseline justify-between text-sm">
