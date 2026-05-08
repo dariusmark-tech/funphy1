@@ -115,9 +115,24 @@ function Dashboard() {
         </div>
       </motion.div>
 
-      {/* Module tree */}
-      <h2 className="mt-10 text-xl font-black">Mechanics path</h2>
-      <p className="text-sm text-muted-foreground">Unlock modules as you climb.</p>
+      {/* Game Map CTA */}
+      <Link
+        to="/game-map"
+        className="glass mt-8 flex items-center justify-between rounded-2xl p-5 hover:border-[var(--neon)]/60 hover:shadow-[var(--shadow-glow)] transition-all"
+      >
+        <div>
+          <p className="text-xs uppercase tracking-wider text-muted-foreground">Game Map</p>
+          <h3 className="mt-1 text-lg font-black">Enter the adventure</h3>
+          <p className="text-sm text-muted-foreground">
+            Beginner is open. Intermediate & Advance unlock as you progress.
+          </p>
+        </div>
+        <ChevronRight className="h-5 w-5 text-[var(--neon)]" />
+      </Link>
+
+      {/* Learning materials */}
+      <h2 className="mt-10 text-xl font-black">Learning materials</h2>
+      <p className="text-sm text-muted-foreground">Modules, references, links and videos.</p>
 
       <div className="mt-6 space-y-4">
         {modules?.map((m, i) => {
