@@ -133,9 +133,8 @@ function Dashboard() {
               <Link
                 to={unlocked ? "/modules/$id" : "/dashboard"}
                 params={{ id: m.id }}
-                disabled={!unlocked}
                 className={`glass group flex items-center gap-4 rounded-2xl p-5 transition-all ${
-                  unlocked ? "hover:border-[var(--neon)]/60 hover:shadow-[var(--shadow-glow)]" : "opacity-50 cursor-not-allowed"
+                  unlocked ? "hover:border-[var(--neon)]/60 hover:shadow-[var(--shadow-glow)]" : "opacity-50 cursor-not-allowed pointer-events-none"
                 }`}
               >
                 <div
