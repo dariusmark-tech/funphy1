@@ -34,8 +34,11 @@ function Placement() {
   const [score, setScore] = useState(0);
   const [picked, setPicked] = useState<number | null>(null);
   const [done, setDone] = useState(false);
+  const [finalScore, setFinalScore] = useState(0);
 
   const q = QUESTIONS[step];
+  const tier =
+    finalScore >= 4 ? "Advance" : finalScore >= 2 ? "Intermediate" : "Beginner";
 
   const choose = (i: number) => {
     if (picked !== null) return;
@@ -43,21 +46,21 @@ function Placement() {
     if (i === q.correct) setScore((s) => s + 1);
     setTimeout(async () => {
       if (step + 1 >= QUESTIONS.length) {
+        const fs = score + (i === q.correct ? 1 : 0);
+        setFinalScore(fs);
         setDone(true);
-        const finalScore = score + (i === q.correct ? 1 : 0);
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
           await supabase
             .from("profiles")
             .update({
               placement_completed: true,
-              physics_score: finalScore * 20,
-              xp: finalScore * 10,
+              physics_score: fs * 20,
+              xp: fs * 10,
             })
             .eq("id", user.id);
         }
-        toast.success(`Placement complete! ${finalScore}/${QUESTIONS.length} correct.`);
-        setTimeout(() => nav({ to: "/dashboard" }), 1400);
+        toast.success(`Assessment complete! ${fs}/${QUESTIONS.length} correct.`);
       } else {
         setStep((s) => s + 1);
         setPicked(null);
@@ -66,13 +69,13 @@ function Placement() {
   };
 
   return (
-    <div className="relative grid min-h-screen place-items-center px-6">
+    <div className="relative grid min-h-screen place-items-center px-6 py-10">
       <div className="grid-bg absolute inset-0 opacity-20" />
       <Toaster />
       <div className="relative z-10 w-full max-w-xl">
         <div className="mb-4 flex items-center justify-between text-xs text-muted-foreground">
-          <span>Placement test</span>
-          <span>{step + 1} / {QUESTIONS.length}</span>
+          <span>Assessment — Beginner / Intermediate / Advance</span>
+          <span>{Math.min(step + 1, QUESTIONS.length)} / {QUESTIONS.length}</span>
         </div>
         <div className="mb-6 h-1.5 overflow-hidden rounded-full bg-secondary">
           <motion.div
@@ -82,39 +85,67 @@ function Placement() {
         </div>
 
         <AnimatePresence mode="wait">
-          <motion.div
-            key={step}
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -16 }}
-            className="glass rounded-2xl p-8"
-          >
-            <h2 className="text-2xl font-black">{q.q}</h2>
-            <div className="mt-6 grid gap-3">
-              {q.a.map((opt, i) => {
-                const isCorrect = picked !== null && i === q.correct;
-                const isWrongPick = picked === i && i !== q.correct;
-                return (
-                  <button
-                    key={i}
-                    disabled={picked !== null}
-                    onClick={() => choose(i)}
-                    className={`flex items-center justify-between rounded-xl border px-5 py-3 text-left text-sm font-medium transition-all ${
-                      isCorrect
-                        ? "border-[var(--neon)] bg-[var(--neon)]/10 text-[var(--neon)]"
-                        : isWrongPick
-                        ? "border-destructive bg-destructive/10 text-destructive animate-shake"
-                        : "border-border bg-background/40 hover:border-[var(--neon)]/60"
-                    }`}
-                  >
-                    {opt}
-                    {isCorrect && <CheckCircle2 className="h-5 w-5" />}
-                    {isWrongPick && <XCircle className="h-5 w-5" />}
-                  </button>
-                );
-              })}
-            </div>
-          </motion.div>
+          {!done ? (
+            <motion.div
+              key={step}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -16 }}
+              className="glass rounded-2xl p-8"
+            >
+              <h2 className="text-2xl font-black">{q.q}</h2>
+              <div className="mt-6 grid gap-3">
+                {q.a.map((opt, i) => {
+                  const isCorrect = picked !== null && i === q.correct;
+                  const isWrongPick = picked === i && i !== q.correct;
+                  return (
+                    <button
+                      key={i}
+                      disabled={picked !== null}
+                      onClick={() => choose(i)}
+                      className={`flex items-center justify-between rounded-xl border px-5 py-3 text-left text-sm font-medium transition-all ${
+                        isCorrect
+                          ? "border-[var(--neon)] bg-[var(--neon)]/10 text-[var(--neon)]"
+                          : isWrongPick
+                          ? "border-destructive bg-destructive/10 text-destructive animate-shake"
+                          : "border-border bg-background/40 hover:border-[var(--neon)]/60"
+                      }`}
+                    >
+                      {opt}
+                      {isCorrect && <CheckCircle2 className="h-5 w-5" />}
+                      {isWrongPick && <XCircle className="h-5 w-5" />}
+                    </button>
+                  );
+                })}
+              </div>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="result"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="glass rounded-2xl p-8 text-center"
+            >
+              <p className="text-xs uppercase tracking-wider text-muted-foreground">
+                Your assessed level
+              </p>
+              <h2 className="mt-2 text-4xl font-black gradient-text">{tier}</h2>
+              <p className="mt-3 text-sm text-muted-foreground">
+                Score: <span className="font-bold text-foreground">{finalScore} / {QUESTIONS.length}</span>
+              </p>
+              <div className="mt-6 rounded-xl border border-[var(--neon)]/30 bg-[var(--neon)]/5 p-4 text-sm">
+                Regardless of your assessed level, every player begins the journey at{" "}
+                <span className="font-bold text-[var(--neon)]">Beginner</span>. Each completed level
+                unlocks a harder one.
+              </div>
+              <button
+                onClick={() => nav({ to: "/dashboard" })}
+                className="mt-6 inline-flex items-center gap-2 rounded-full bg-[var(--neon)] px-6 py-3 font-bold text-primary-foreground shadow-[var(--shadow-glow)] hover:scale-[1.02] transition-transform"
+              >
+                Continue to Dashboard
+              </button>
+            </motion.div>
+          )}
         </AnimatePresence>
       </div>
     </div>
