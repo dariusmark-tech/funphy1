@@ -16,6 +16,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppShopRouteImport } from './routes/_app.shop'
 import { Route as AppProfileRouteImport } from './routes/_app.profile'
 import { Route as AppPracticeRouteImport } from './routes/_app.practice'
+import { Route as AppGameMapRouteImport } from './routes/_app.game-map'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppModulesIdRouteImport } from './routes/_app.modules.$id'
 
@@ -53,6 +54,11 @@ const AppPracticeRoute = AppPracticeRouteImport.update({
   path: '/practice',
   getParentRoute: () => AppRoute,
 } as any)
+const AppGameMapRoute = AppGameMapRouteImport.update({
+  id: '/game-map',
+  path: '/game-map',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppDashboardRoute = AppDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -69,6 +75,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/placement': typeof PlacementRoute
   '/dashboard': typeof AppDashboardRoute
+  '/game-map': typeof AppGameMapRoute
   '/practice': typeof AppPracticeRoute
   '/profile': typeof AppProfileRoute
   '/shop': typeof AppShopRoute
@@ -79,6 +86,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/placement': typeof PlacementRoute
   '/dashboard': typeof AppDashboardRoute
+  '/game-map': typeof AppGameMapRoute
   '/practice': typeof AppPracticeRoute
   '/profile': typeof AppProfileRoute
   '/shop': typeof AppShopRoute
@@ -91,6 +99,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/placement': typeof PlacementRoute
   '/_app/dashboard': typeof AppDashboardRoute
+  '/_app/game-map': typeof AppGameMapRoute
   '/_app/practice': typeof AppPracticeRoute
   '/_app/profile': typeof AppProfileRoute
   '/_app/shop': typeof AppShopRoute
@@ -103,6 +112,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/placement'
     | '/dashboard'
+    | '/game-map'
     | '/practice'
     | '/profile'
     | '/shop'
@@ -113,6 +123,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/placement'
     | '/dashboard'
+    | '/game-map'
     | '/practice'
     | '/profile'
     | '/shop'
@@ -124,6 +135,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/placement'
     | '/_app/dashboard'
+    | '/_app/game-map'
     | '/_app/practice'
     | '/_app/profile'
     | '/_app/shop'
@@ -188,6 +200,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppPracticeRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/game-map': {
+      id: '/_app/game-map'
+      path: '/game-map'
+      fullPath: '/game-map'
+      preLoaderRoute: typeof AppGameMapRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/dashboard': {
       id: '/_app/dashboard'
       path: '/dashboard'
@@ -207,6 +226,7 @@ declare module '@tanstack/react-router' {
 
 interface AppRouteChildren {
   AppDashboardRoute: typeof AppDashboardRoute
+  AppGameMapRoute: typeof AppGameMapRoute
   AppPracticeRoute: typeof AppPracticeRoute
   AppProfileRoute: typeof AppProfileRoute
   AppShopRoute: typeof AppShopRoute
@@ -215,6 +235,7 @@ interface AppRouteChildren {
 
 const AppRouteChildren: AppRouteChildren = {
   AppDashboardRoute: AppDashboardRoute,
+  AppGameMapRoute: AppGameMapRoute,
   AppPracticeRoute: AppPracticeRoute,
   AppProfileRoute: AppProfileRoute,
   AppShopRoute: AppShopRoute,

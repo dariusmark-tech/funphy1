@@ -27,7 +27,7 @@ function ProfilePage() {
           {(profile.display_name || profile.email || "?")[0].toUpperCase()}
         </div>
         <div>
-          <h1 className="text-2xl font-black">{profile.display_name || "Climber"}</h1>
+          <h1 className="text-2xl font-black">{profile.display_name || "Player"}</h1>
           <p className="text-sm text-muted-foreground">{user?.email}</p>
         </div>
       </div>

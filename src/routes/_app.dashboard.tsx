@@ -64,9 +64,9 @@ function Dashboard() {
         {/* Hero status card */}
         <div className="glass relative overflow-hidden rounded-2xl p-6 md:col-span-2">
           <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-[var(--neon)]/15 blur-3xl" />
-          <p className="text-xs uppercase tracking-wider text-muted-foreground">Welcome back</p>
+          <p className="text-xs uppercase tracking-wider text-muted-foreground">Welcome back, player</p>
           <h1 className="mt-1 text-3xl font-black">
-            {profile.display_name || "Climber"}
+            {profile.display_name || "Player"}
           </h1>
           <div className="mt-6">
             <div className="flex items-baseline justify-between text-sm">
@@ -115,9 +115,24 @@ function Dashboard() {
         </div>
       </motion.div>
 
-      {/* Module tree */}
-      <h2 className="mt-10 text-xl font-black">Mechanics path</h2>
-      <p className="text-sm text-muted-foreground">Unlock modules as you climb.</p>
+      {/* Game Map CTA */}
+      <Link
+        to="/game-map"
+        className="glass mt-8 flex items-center justify-between rounded-2xl p-5 hover:border-[var(--neon)]/60 hover:shadow-[var(--shadow-glow)] transition-all"
+      >
+        <div>
+          <p className="text-xs uppercase tracking-wider text-muted-foreground">Game Map</p>
+          <h3 className="mt-1 text-lg font-black">Enter the adventure</h3>
+          <p className="text-sm text-muted-foreground">
+            Beginner is open. Intermediate & Advance unlock as you progress.
+          </p>
+        </div>
+        <ChevronRight className="h-5 w-5 text-[var(--neon)]" />
+      </Link>
+
+      {/* Learning materials */}
+      <h2 className="mt-10 text-xl font-black">Learning materials</h2>
+      <p className="text-sm text-muted-foreground">Modules, references, links and videos.</p>
 
       <div className="mt-6 space-y-4">
         {modules?.map((m, i) => {

@@ -16,11 +16,11 @@ export function AppHeader() {
           <div className="relative h-9 w-9">
             <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-[var(--neon)] to-[var(--cyan)] animate-pulse-glow" />
             <div className="absolute inset-[2px] grid place-items-center rounded-[10px] bg-background">
-              <span className="text-sm font-black gradient-text">PC</span>
+              <span className="text-[10px] font-black gradient-text">FP1</span>
             </div>
           </div>
           <span className="text-lg font-black tracking-tight">
-            Physi<span className="gradient-text">Climb</span>
+            FUN<span className="gradient-text">PHY1</span>
           </span>
         </Link>
 
