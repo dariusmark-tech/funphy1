@@ -71,7 +71,10 @@ export type Database = {
       lessons: {
         Row: {
           created_at: string
+          diagram_url: string | null
+          equations: Json
           id: string
+          key_points: Json
           module_id: string
           order_index: number
           text_content: string | null
@@ -80,7 +83,10 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          diagram_url?: string | null
+          equations?: Json
           id?: string
+          key_points?: Json
           module_id: string
           order_index: number
           text_content?: string | null
@@ -89,7 +95,10 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          diagram_url?: string | null
+          equations?: Json
           id?: string
+          key_points?: Json
           module_id?: string
           order_index?: number
           text_content?: string | null
