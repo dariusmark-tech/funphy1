@@ -195,14 +195,19 @@ function LessonReader() {
               </div>
               <div className="overflow-hidden rounded-2xl border border-border bg-white p-3">
                 <img
-                  src={lesson.diagram_url}
+                  src={`https://wsrv.nl/?url=${encodeURIComponent(lesson.diagram_url)}&w=800&output=png`}
                   alt={`${lesson.title} diagram`}
                   className="mx-auto max-h-72 w-auto object-contain"
                   loading="lazy"
                   referrerPolicy="no-referrer"
-                  crossOrigin="anonymous"
                   onError={(e) => {
-                    (e.currentTarget as HTMLImageElement).style.display = "none";
+                    const img = e.currentTarget as HTMLImageElement;
+                    if (!img.dataset.fallback) {
+                      img.dataset.fallback = "1";
+                      img.src = lesson.diagram_url!;
+                    } else {
+                      img.style.display = "none";
+                    }
                   }}
                 />
               </div>
