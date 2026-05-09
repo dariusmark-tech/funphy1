@@ -39,10 +39,13 @@ function ModuleDetail() {
     queryFn: async () => {
       const { data } = await supabase
         .from("user_progress")
-        .select("lesson_id, completed")
+        .select("lesson_id, completed, posttest_passed")
         .eq("user_id", user!.id)
         .eq("module_id", id);
-      return new Set((data ?? []).filter((p) => p.completed).map((p) => p.lesson_id));
+      return {
+        completed: new Set((data ?? []).filter((p) => p.completed).map((p) => p.lesson_id)),
+        passed: new Set((data ?? []).filter((p) => p.posttest_passed).map((p) => p.lesson_id)),
+      };
     },
   });
 
@@ -67,22 +70,32 @@ function ModuleDetail() {
 
       <div className="mt-5 space-y-2.5">
         {lessons?.map((l, i) => {
-          const done = progress?.has(l.id);
-          return (
-            <Link
-              key={l.id}
-              to="/lessons/$id"
-              params={{ id: l.id }}
-              className="glass flex items-center gap-3 rounded-2xl p-4 hover:border-primary/60"
-            >
+          const done = progress?.completed.has(l.id);
+          const prev = i > 0 ? lessons[i - 1] : null;
+          const locked = i > 0 && !(prev && progress?.passed.has(prev.id));
+
+          const inner = (
+            <>
               <div
                 className="grid h-11 w-11 place-items-center rounded-xl"
                 style={{
-                  background: done ? "color-mix(in oklab, var(--primary) 15%, transparent)" : "color-mix(in oklab, var(--accent) 12%, transparent)",
-                  border: `1px solid ${done ? "var(--primary)" : "color-mix(in oklab, var(--accent) 35%, transparent)"}`,
+                  background: locked
+                    ? "color-mix(in oklab, var(--muted) 40%, transparent)"
+                    : done
+                      ? "color-mix(in oklab, var(--primary) 15%, transparent)"
+                      : "color-mix(in oklab, var(--accent) 12%, transparent)",
+                  border: `1px solid ${
+                    locked
+                      ? "color-mix(in oklab, var(--muted-foreground) 25%, transparent)"
+                      : done
+                        ? "var(--primary)"
+                        : "color-mix(in oklab, var(--accent) 35%, transparent)"
+                  }`,
                 }}
               >
-                {done ? (
+                {locked ? (
+                  <Lock className="h-5 w-5 text-muted-foreground" />
+                ) : done ? (
                   <CheckCircle2 className="h-5 w-5 text-primary" />
                 ) : (
                   <BookOpen className="h-5 w-5 text-accent" />
@@ -92,11 +105,38 @@ function ModuleDetail() {
                 <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
                   Lesson {i + 1}
                 </div>
-                <h3 className="truncate font-bold">{l.title}</h3>
+                <h3 className={`truncate font-bold ${locked ? "text-muted-foreground" : ""}`}>
+                  {l.title}
+                </h3>
               </div>
-              <span className="inline-flex items-center gap-1 rounded-full bg-primary px-3 py-1.5 text-xs font-bold text-primary-foreground">
-                <Play className="h-3 w-3" /> {done ? "Review" : "Start"}
-              </span>
+              {locked ? (
+                <span className="inline-flex items-center gap-1 rounded-full bg-muted px-3 py-1.5 text-xs font-bold text-muted-foreground">
+                  <Lock className="h-3 w-3" /> Locked
+                </span>
+              ) : (
+                <span className="inline-flex items-center gap-1 rounded-full bg-primary px-3 py-1.5 text-xs font-bold text-primary-foreground">
+                  <Play className="h-3 w-3" /> {done ? "Review" : "Start"}
+                </span>
+              )}
+            </>
+          );
+
+          return locked ? (
+            <div
+              key={l.id}
+              className="glass flex items-center gap-3 rounded-2xl p-4 opacity-70 cursor-not-allowed"
+              title="Pass the previous lesson's posttest to unlock"
+            >
+              {inner}
+            </div>
+          ) : (
+            <Link
+              key={l.id}
+              to="/lessons/$id"
+              params={{ id: l.id }}
+              className="glass flex items-center gap-3 rounded-2xl p-4 hover:border-primary/60"
+            >
+              {inner}
             </Link>
           );
         })}
