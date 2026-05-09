@@ -136,6 +136,33 @@ export type Database = {
         }
         Relationships: []
       }
+      notes: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          content?: string
+          created_at?: string
+          id?: string
+          title?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -269,6 +296,30 @@ export type Database = {
           },
         ]
       }
+      references_list: {
+        Row: {
+          citation: string
+          created_at: string
+          id: string
+          order_index: number
+          url: string | null
+        }
+        Insert: {
+          citation: string
+          created_at?: string
+          id?: string
+          order_index?: number
+          url?: string | null
+        }
+        Update: {
+          citation?: string
+          created_at?: string
+          id?: string
+          order_index?: number
+          url?: string | null
+        }
+        Relationships: []
+      }
       transactions: {
         Row: {
           created_at: string
@@ -361,6 +412,47 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      videos: {
+        Row: {
+          channel: string | null
+          created_at: string
+          id: string
+          module_id: string | null
+          order_index: number
+          thumbnail_url: string | null
+          title: string
+          url: string
+        }
+        Insert: {
+          channel?: string | null
+          created_at?: string
+          id?: string
+          module_id?: string | null
+          order_index?: number
+          thumbnail_url?: string | null
+          title: string
+          url: string
+        }
+        Update: {
+          channel?: string | null
+          created_at?: string
+          id?: string
+          module_id?: string | null
+          order_index?: number
+          thumbnail_url?: string | null
+          title?: string
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "videos_module_id_fkey"
+            columns: ["module_id"]
+            isOneToOne: false
+            referencedRelation: "modules"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
