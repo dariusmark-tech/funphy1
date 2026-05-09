@@ -199,6 +199,11 @@ function LessonReader() {
                   alt={`${lesson.title} diagram`}
                   className="mx-auto max-h-72 w-auto object-contain"
                   loading="lazy"
+                  referrerPolicy="no-referrer"
+                  crossOrigin="anonymous"
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).style.display = "none";
+                  }}
                 />
               </div>
             </section>
