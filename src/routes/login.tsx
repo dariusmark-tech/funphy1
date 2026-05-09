@@ -114,8 +114,12 @@ function LoginPage() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
-              className="rounded-3xl border border-border bg-card/80 p-7 shadow-xl backdrop-blur"
+              className="light rounded-3xl border border-[hsl(214_32%_91%)] bg-white p-7 text-slate-900 shadow-xl backdrop-blur"
             >
+              <div className="mb-4 flex flex-col items-center">
+                <img src={logo} alt="FUNPHY" className="h-14 w-14" />
+                <span className="mt-1 text-lg font-black tracking-tight text-slate-900">FUNPHY</span>
+              </div>
               <button
                 type="button"
                 onClick={() => setView("welcome")}
@@ -178,8 +182,12 @@ function LoginPage() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
-              className="rounded-3xl border border-border bg-card/80 p-7 shadow-xl backdrop-blur"
+              className="light rounded-3xl border border-[hsl(214_32%_91%)] bg-white p-7 text-slate-900 shadow-xl backdrop-blur"
             >
+              <div className="mb-4 flex flex-col items-center">
+                <img src={logo} alt="FUNPHY" className="h-14 w-14" />
+                <span className="mt-1 text-lg font-black tracking-tight text-slate-900">FUNPHY</span>
+              </div>
               <button
                 type="button"
                 onClick={() => setView("welcome")}
