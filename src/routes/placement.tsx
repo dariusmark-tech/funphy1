@@ -4,10 +4,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
-import { CheckCircle2, XCircle } from "lucide-react";
+import { CheckCircle2, XCircle, ChevronRight } from "lucide-react";
 
 const QUESTIONS = [
-  { q: "An object moves at constant velocity. Net force is…", a: ["Zero", "Constant non-zero", "Increasing", "Equal to weight"], correct: 0 },
+  { q: "According to Newton's First Law, an object will:", a: ["Accelerate without force acting on it", "Remain at rest or move with constant velocity unless acted upon by a net force", "Always move in a circle", "Stop moving when a force is applied"], correct: 1 },
   { q: "Acceleration units?", a: ["m/s", "m/s²", "kg·m/s", "N·s"], correct: 1 },
   { q: "Newton's 2nd law:", a: ["F = mv", "F = ma", "F = m/a", "F = m + a"], correct: 1 },
   { q: "Kinetic energy of a 2 kg object at 3 m/s?", a: ["6 J", "9 J", "12 J", "18 J"], correct: 1 },
@@ -28,73 +28,139 @@ export const Route = createFileRoute("/placement")({
   component: Placement,
 });
 
+type Stage = "intro" | "diagnostic" | "questions" | "results";
+
 function Placement() {
   const nav = useNavigate();
+  const [stage, setStage] = useState<Stage>("intro");
   const [step, setStep] = useState(0);
   const [score, setScore] = useState(0);
   const [picked, setPicked] = useState<number | null>(null);
-  const [done, setDone] = useState(false);
   const [finalScore, setFinalScore] = useState(0);
 
   const q = QUESTIONS[step];
-  const tier =
-    finalScore >= 4 ? "Advance" : finalScore >= 2 ? "Intermediate" : "Beginner";
+  const tier = finalScore >= 4 ? "Advance" : finalScore >= 2 ? "Intermediate" : "Beginner";
+  const feedback =
+    finalScore >= 4
+      ? "Excellent grasp of mechanics — strong foundation in vectors, motion, and energy."
+      : finalScore >= 2
+      ? "The user has a foundational understanding of Velocity, Momentum, and Forces."
+      : "Recommend starting from the basics: vectors, motion, and free-body diagrams.";
 
   const choose = (i: number) => {
     if (picked !== null) return;
     setPicked(i);
     if (i === q.correct) setScore((s) => s + 1);
-    setTimeout(async () => {
-      if (step + 1 >= QUESTIONS.length) {
-        const fs = score + (i === q.correct ? 1 : 0);
-        setFinalScore(fs);
-        setDone(true);
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user) {
-          await supabase
-            .from("profiles")
-            .update({
-              placement_completed: true,
-              physics_score: fs * 20,
-              xp: fs * 10,
-            })
-            .eq("id", user.id);
-        }
-        toast.success(`Assessment complete! ${fs}/${QUESTIONS.length} correct.`);
-      } else {
-        setStep((s) => s + 1);
-        setPicked(null);
+  };
+
+  const next = async () => {
+    const newScore = score;
+    if (step + 1 >= QUESTIONS.length) {
+      setFinalScore(newScore);
+      setStage("results");
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        await supabase
+          .from("profiles")
+          .update({
+            placement_completed: true,
+            physics_score: newScore * 20,
+            xp: newScore * 10,
+          })
+          .eq("id", user.id);
       }
-    }, 800);
+    } else {
+      setStep((s) => s + 1);
+      setPicked(null);
+    }
   };
 
   return (
-    <div className="relative grid min-h-screen place-items-center px-6 py-10">
-      <div className="grid-bg absolute inset-0 opacity-20" />
+    <div className="relative grid min-h-screen place-items-center overflow-hidden bg-background px-5 py-8">
+      <div className="pointer-events-none absolute -top-40 left-1/2 h-[420px] w-[820px] -translate-x-1/2 rounded-full bg-primary/10 blur-[120px]" />
       <Toaster />
-      <div className="relative z-10 w-full max-w-xl">
-        <div className="mb-4 flex items-center justify-between text-xs text-muted-foreground">
-          <span>Assessment — Beginner / Intermediate / Advance</span>
-          <span>{Math.min(step + 1, QUESTIONS.length)} / {QUESTIONS.length}</span>
-        </div>
-        <div className="mb-6 h-1.5 overflow-hidden rounded-full bg-secondary">
-          <motion.div
-            animate={{ width: `${((step + (done ? 1 : 0)) / QUESTIONS.length) * 100}%` }}
-            className="h-full bg-gradient-to-r from-[var(--neon)] to-[var(--cyan)]"
-          />
-        </div>
-
+      <div className="relative z-10 w-full max-w-sm">
         <AnimatePresence mode="wait">
-          {!done ? (
+          {stage === "intro" && (
             <motion.div
-              key={step}
-              initial={{ opacity: 0, y: 16 }}
+              key="intro"
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -16 }}
-              className="glass rounded-2xl p-8"
+              exit={{ opacity: 0, y: -12 }}
+              className="rounded-3xl border-2 border-border bg-card p-7 shadow-xl"
             >
-              <h2 className="text-2xl font-black">{q.q}</h2>
-              <div className="mt-6 grid gap-3">
+              <h2 className="text-center text-2xl font-black italic">User Assessment</h2>
+              <div className="mt-6 rounded-2xl border-2 border-border bg-background/60 p-5 text-center text-sm leading-relaxed">
+                <p className="font-bold">Ready to become the Master of Physics?</p>
+                <p className="mt-3 text-muted-foreground">
+                  Take our simple assessment and kick off your fun and exciting journey into the
+                  realm of <span className="font-bold text-primary">"Physica"</span> and become
+                  Master of Physics!
+                </p>
+              </div>
+              <p className="mt-5 text-[11px] italic text-muted-foreground">
+                Disclaimer: This Assessment is designed only to determine the user's/player's
+                knowledge in Physics
+              </p>
+              <button
+                onClick={() => setStage("diagnostic")}
+                className="ml-auto mt-6 flex items-center gap-1 rounded-full bg-primary px-5 py-2 text-sm font-bold text-primary-foreground shadow-lg shadow-primary/30"
+              >
+                Next <ChevronRight className="h-4 w-4" />
+              </button>
+            </motion.div>
+          )}
+
+          {stage === "diagnostic" && (
+            <motion.div
+              key="diag"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              className="rounded-3xl border-2 border-border bg-card p-7 shadow-xl"
+            >
+              <h2 className="text-center text-2xl font-black italic">Diagnostic Assessment</h2>
+              <div className="mt-6 rounded-2xl border-2 border-border bg-background/60 p-5 text-center text-sm leading-relaxed">
+                This assessment will identify the user's prior knowledge, strength, and weaknesses
+                before engaging in the game.
+                <p className="mt-3 text-muted-foreground">
+                  It will include questions to gauge familiarity with physics concepts (e.g.,
+                  vectors, motion, forces) and mathematical skills (e.g., algebra, calculus
+                  basics).
+                </p>
+              </div>
+              <button
+                onClick={() => setStage("questions")}
+                className="mx-auto mt-6 block rounded-full border-2 border-primary bg-background px-8 py-2.5 text-sm font-bold italic text-primary hover:bg-primary hover:text-primary-foreground"
+              >
+                Start Assessment
+              </button>
+            </motion.div>
+          )}
+
+          {stage === "questions" && (
+            <motion.div
+              key={`q-${step}`}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              className="rounded-3xl border-2 border-border bg-card p-6 shadow-xl"
+            >
+              <div className="mb-3 flex items-center justify-between text-xs text-muted-foreground">
+                <span>Answer the {QUESTIONS.length} following physics questions</span>
+                <span className="font-bold">{step + 1}/{QUESTIONS.length}</span>
+              </div>
+              <div className="mb-5 h-1.5 overflow-hidden rounded-full bg-secondary">
+                <motion.div
+                  animate={{ width: `${((step + (picked !== null ? 1 : 0)) / QUESTIONS.length) * 100}%` }}
+                  className="h-full bg-gradient-to-r from-primary to-accent"
+                />
+              </div>
+
+              <p className="text-sm font-bold">
+                {step + 1}. {q.q}
+              </p>
+              <div className="mt-4 space-y-2">
                 {q.a.map((opt, i) => {
                   const isCorrect = picked !== null && i === q.correct;
                   const isWrongPick = picked === i && i !== q.correct;
@@ -103,46 +169,75 @@ function Placement() {
                       key={i}
                       disabled={picked !== null}
                       onClick={() => choose(i)}
-                      className={`flex items-center justify-between rounded-xl border px-5 py-3 text-left text-sm font-medium transition-all ${
+                      className={`flex w-full items-start gap-2 rounded-2xl border-2 px-3 py-2.5 text-left text-xs font-medium transition-all ${
                         isCorrect
-                          ? "border-[var(--neon)] bg-[var(--neon)]/10 text-[var(--neon)]"
+                          ? "border-primary bg-primary/10 text-primary"
                           : isWrongPick
-                          ? "border-destructive bg-destructive/10 text-destructive animate-shake"
-                          : "border-border bg-background/40 hover:border-[var(--neon)]/60"
+                          ? "border-destructive bg-destructive/10 text-destructive"
+                          : "border-border bg-background hover:border-primary/60"
                       }`}
                     >
-                      {opt}
-                      {isCorrect && <CheckCircle2 className="h-5 w-5" />}
-                      {isWrongPick && <XCircle className="h-5 w-5" />}
+                      <span className="mt-0.5 grid h-4 w-4 shrink-0 place-items-center rounded-full border-2 border-current text-[10px] font-black">
+                        {String.fromCharCode(65 + i)}
+                      </span>
+                      <span className="flex-1">{opt}</span>
+                      {isCorrect && <CheckCircle2 className="h-4 w-4" />}
+                      {isWrongPick && <XCircle className="h-4 w-4" />}
                     </button>
                   );
                 })}
               </div>
+
+              <button
+                disabled={picked === null}
+                onClick={next}
+                className="ml-auto mt-5 flex items-center gap-1 rounded-full bg-primary px-5 py-2 text-sm font-bold text-primary-foreground shadow-lg shadow-primary/30 disabled:opacity-40"
+              >
+                {step + 1 >= QUESTIONS.length ? "Finish" : "Next"} <ChevronRight className="h-4 w-4" />
+              </button>
             </motion.div>
-          ) : (
+          )}
+
+          {stage === "results" && (
             <motion.div
               key="result"
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="glass rounded-2xl p-8 text-center"
+              className="rounded-3xl border-2 border-border bg-card p-7 shadow-xl"
             >
-              <p className="text-xs uppercase tracking-wider text-muted-foreground">
-                Your assessed level
-              </p>
-              <h2 className="mt-2 text-4xl font-black gradient-text">{tier}</h2>
-              <p className="mt-3 text-sm text-muted-foreground">
-                Score: <span className="font-bold text-foreground">{finalScore} / {QUESTIONS.length}</span>
-              </p>
-              <div className="mt-6 rounded-xl border border-[var(--neon)]/30 bg-[var(--neon)]/5 p-4 text-sm">
-                Regardless of your assessed level, every player begins the journey at{" "}
-                <span className="font-bold text-[var(--neon)]">Beginner</span>. Each completed level
-                unlocks a harder one.
+              <h2 className="text-center text-2xl font-black italic">Assessment Results</h2>
+              <p className="mt-4 text-center text-sm font-bold">User's Results:</p>
+
+              <div className="mt-4 space-y-2 rounded-2xl border-2 border-border bg-background/60 p-5 text-sm">
+                <p>
+                  <span className="font-bold">Score:</span> {finalScore}/{QUESTIONS.length}
+                </p>
+                <p>
+                  <span className="font-bold">Level:</span>{" "}
+                  <span className="font-black text-primary">{tier}</span>
+                </p>
+                <p>
+                  <span className="font-bold">Feedback:</span>{" "}
+                  <span className="text-muted-foreground">{feedback}</span>
+                </p>
+                <p>
+                  <span className="font-bold">Recommended:</span>{" "}
+                  <span className="text-muted-foreground">
+                    focus on reviewing and practicing problem solving and free-body diagrams
+                  </span>
+                </p>
               </div>
+
+              <p className="mt-4 rounded-xl border border-primary/30 bg-primary/5 p-3 text-center text-xs">
+                Every player begins at <span className="font-bold text-primary">Beginner</span> —
+                completed levels unlock harder ones.
+              </p>
+
               <button
                 onClick={() => nav({ to: "/dashboard" })}
-                className="mt-6 inline-flex items-center gap-2 rounded-full bg-[var(--neon)] px-6 py-3 font-bold text-primary-foreground shadow-[var(--shadow-glow)] hover:scale-[1.02] transition-transform"
+                className="ml-auto mt-5 flex items-center gap-1 rounded-full bg-primary px-5 py-2.5 text-sm font-bold text-primary-foreground shadow-lg shadow-primary/30"
               >
-                Continue to Dashboard
+                Continue <ChevronRight className="h-4 w-4" />
               </button>
             </motion.div>
           )}
