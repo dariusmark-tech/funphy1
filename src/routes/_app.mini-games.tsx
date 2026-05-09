@@ -6,7 +6,7 @@ export const Route = createFileRoute("/_app/mini-games")({
 });
 
 const GAMES = [
-  { name: "Vector Racer", color: "var(--neon)", to: "/mini-games/vector-racer" as const, unlocked: true },
+  { name: "Vector Racer", color: "var(--neon)", to: "/vector-racer" as const, unlocked: true },
   { name: "Force Builder", color: "var(--cyan)", unlocked: false },
   { name: "Kinematics Jump", color: "var(--xp)", unlocked: false },
   { name: "Momentum Crash", color: "var(--streak)", unlocked: false },
