@@ -275,7 +275,9 @@ export type Database = {
           created_at: string
           id: string
           is_checkpoint: boolean
-          module_id: string
+          lesson_id: string | null
+          module_id: string | null
+          passing_score: number | null
           time_limit_seconds: number
           title: string
         }
@@ -283,7 +285,9 @@ export type Database = {
           created_at?: string
           id?: string
           is_checkpoint?: boolean
-          module_id: string
+          lesson_id?: string | null
+          module_id?: string | null
+          passing_score?: number | null
           time_limit_seconds?: number
           title: string
         }
@@ -291,11 +295,20 @@ export type Database = {
           created_at?: string
           id?: string
           is_checkpoint?: boolean
-          module_id?: string
+          lesson_id?: string | null
+          module_id?: string | null
+          passing_score?: number | null
           time_limit_seconds?: number
           title?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "quizzes_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "lessons"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "quizzes_module_id_fkey"
             columns: ["module_id"]
@@ -361,6 +374,8 @@ export type Database = {
           id: string
           lesson_id: string | null
           module_id: string | null
+          posttest_passed: boolean | null
+          posttest_score: number | null
           score: number | null
           user_id: string
         }
@@ -371,6 +386,8 @@ export type Database = {
           id?: string
           lesson_id?: string | null
           module_id?: string | null
+          posttest_passed?: boolean | null
+          posttest_score?: number | null
           score?: number | null
           user_id: string
         }
@@ -381,6 +398,8 @@ export type Database = {
           id?: string
           lesson_id?: string | null
           module_id?: string | null
+          posttest_passed?: boolean | null
+          posttest_score?: number | null
           score?: number | null
           user_id?: string
         }
