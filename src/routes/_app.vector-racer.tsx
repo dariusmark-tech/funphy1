@@ -109,14 +109,21 @@ function VectorRacer() {
         // persist
         if (user) {
           (async () => {
-            const prev = best?.high_score ?? 0;
-            await supabase.from("game_scores").upsert({
-              user_id: user.id,
-              game_name: "vector-racer",
-              high_score: Math.max(prev, final),
-              times_played: (best?.times_played ?? 0) + 1,
+            const { data: existing } = await supabase
+              .from("game_scores").select("id, high_score, times_played")
+              .eq("user_id", user.id).eq("game_name", "vector-racer").eq("level", 1).maybeSingle();
+            const next = {
+              high_score: Math.max(existing?.high_score ?? 0, final),
+              times_played: (existing?.times_played ?? 0) + 1,
               updated_at: new Date().toISOString(),
-            } as any, { onConflict: "user_id,game_name" } as any);
+            };
+            if (existing) {
+              await supabase.from("game_scores").update(next).eq("id", existing.id);
+            } else {
+              await supabase.from("game_scores").insert({
+                user_id: user.id, game_name: "vector-racer", level: 1, ...next,
+              } as any);
+            }
             refetch();
           })();
         }
