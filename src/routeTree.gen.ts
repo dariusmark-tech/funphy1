@@ -32,6 +32,7 @@ import { Route as AppLearningNotesRouteImport } from './routes/_app.learning.not
 import { Route as AppAdminUsersRouteImport } from './routes/_app.admin.users'
 import { Route as AppAdminSettingsRouteImport } from './routes/_app.admin.settings'
 import { Route as AppLessonsIdPosttestRouteImport } from './routes/_app.lessons.$id.posttest'
+import { Route as AppLessonsIdAssessmentRouteImport } from './routes/_app.lessons.$id.assessment'
 
 const PlacementRoute = PlacementRouteImport.update({
   id: '/placement',
@@ -147,6 +148,11 @@ const AppLessonsIdPosttestRoute = AppLessonsIdPosttestRouteImport.update({
   path: '/posttest',
   getParentRoute: () => AppLessonsIdRoute,
 } as any)
+const AppLessonsIdAssessmentRoute = AppLessonsIdAssessmentRouteImport.update({
+  id: '/assessment',
+  path: '/assessment',
+  getParentRoute: () => AppLessonsIdRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -170,6 +176,7 @@ export interface FileRoutesByFullPath {
   '/modules/$id': typeof AppModulesIdRoute
   '/admin/': typeof AppAdminIndexRoute
   '/learning/': typeof AppLearningIndexRoute
+  '/lessons/$id/assessment': typeof AppLessonsIdAssessmentRoute
   '/lessons/$id/posttest': typeof AppLessonsIdPosttestRoute
 }
 export interface FileRoutesByTo {
@@ -192,6 +199,7 @@ export interface FileRoutesByTo {
   '/modules/$id': typeof AppModulesIdRoute
   '/admin': typeof AppAdminIndexRoute
   '/learning': typeof AppLearningIndexRoute
+  '/lessons/$id/assessment': typeof AppLessonsIdAssessmentRoute
   '/lessons/$id/posttest': typeof AppLessonsIdPosttestRoute
 }
 export interface FileRoutesById {
@@ -218,6 +226,7 @@ export interface FileRoutesById {
   '/_app/modules/$id': typeof AppModulesIdRoute
   '/_app/admin/': typeof AppAdminIndexRoute
   '/_app/learning/': typeof AppLearningIndexRoute
+  '/_app/lessons/$id/assessment': typeof AppLessonsIdAssessmentRoute
   '/_app/lessons/$id/posttest': typeof AppLessonsIdPosttestRoute
 }
 export interface FileRouteTypes {
@@ -244,6 +253,7 @@ export interface FileRouteTypes {
     | '/modules/$id'
     | '/admin/'
     | '/learning/'
+    | '/lessons/$id/assessment'
     | '/lessons/$id/posttest'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -266,6 +276,7 @@ export interface FileRouteTypes {
     | '/modules/$id'
     | '/admin'
     | '/learning'
+    | '/lessons/$id/assessment'
     | '/lessons/$id/posttest'
   id:
     | '__root__'
@@ -291,6 +302,7 @@ export interface FileRouteTypes {
     | '/_app/modules/$id'
     | '/_app/admin/'
     | '/_app/learning/'
+    | '/_app/lessons/$id/assessment'
     | '/_app/lessons/$id/posttest'
   fileRoutesById: FileRoutesById
 }
@@ -464,6 +476,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppLessonsIdPosttestRouteImport
       parentRoute: typeof AppLessonsIdRoute
     }
+    '/_app/lessons/$id/assessment': {
+      id: '/_app/lessons/$id/assessment'
+      path: '/assessment'
+      fullPath: '/lessons/$id/assessment'
+      preLoaderRoute: typeof AppLessonsIdAssessmentRouteImport
+      parentRoute: typeof AppLessonsIdRoute
+    }
   }
 }
 
@@ -502,10 +521,12 @@ const AppLearningRouteWithChildren = AppLearningRoute._addFileChildren(
 )
 
 interface AppLessonsIdRouteChildren {
+  AppLessonsIdAssessmentRoute: typeof AppLessonsIdAssessmentRoute
   AppLessonsIdPosttestRoute: typeof AppLessonsIdPosttestRoute
 }
 
 const AppLessonsIdRouteChildren: AppLessonsIdRouteChildren = {
+  AppLessonsIdAssessmentRoute: AppLessonsIdAssessmentRoute,
   AppLessonsIdPosttestRoute: AppLessonsIdPosttestRoute,
 }
 

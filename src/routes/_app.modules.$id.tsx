@@ -1,8 +1,9 @@
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
-import { Play, ChevronLeft, BookOpen, CheckCircle2, Lock } from "lucide-react";
+import { Play, ChevronLeft, BookOpen, CheckCircle2, Lock, Sparkles } from "lucide-react";
 
 export const Route = createFileRoute("/_app/modules/$id")({
   component: ModuleDetail,
@@ -76,7 +77,9 @@ function ModuleDetail() {
 
           const inner = (
             <>
-              <div
+              <motion.div
+                animate={locked ? {} : { y: [0, -2, 0] }}
+                transition={{ duration: 1.8, repeat: Infinity, delay: i * 0.12 }}
                 className="grid h-11 w-11 place-items-center rounded-xl"
                 style={{
                   background: locked
@@ -100,7 +103,7 @@ function ModuleDetail() {
                 ) : (
                   <BookOpen className="h-5 w-5 text-accent" />
                 )}
-              </div>
+              </motion.div>
               <div className="flex-1 min-w-0">
                 <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
                   Lesson {i + 1}
@@ -114,30 +117,42 @@ function ModuleDetail() {
                   <Lock className="h-3 w-3" /> Locked
                 </span>
               ) : (
-                <span className="inline-flex items-center gap-1 rounded-full bg-primary px-3 py-1.5 text-xs font-bold text-primary-foreground">
-                  <Play className="h-3 w-3" /> {done ? "Review" : "Start"}
+                <span className={`inline-flex items-center gap-1 rounded-full bg-primary px-3 py-1.5 text-xs font-bold text-primary-foreground ${done ? "" : "animate-pulse-glow"}`}>
+                  {done ? <Play className="h-3 w-3" /> : <Sparkles className="h-3 w-3" />}
+                  {done ? "Review" : "Start"}
                 </span>
               )}
             </>
           );
 
           return locked ? (
-            <div
+            <motion.div
               key={l.id}
-              className="glass flex items-center gap-3 rounded-2xl p-4 opacity-70 cursor-not-allowed"
-              title="Pass the previous lesson's posttest to unlock"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 0.7, y: 0 }}
+              transition={{ delay: i * 0.06 }}
+              className="glass flex cursor-not-allowed items-center gap-3 rounded-2xl p-4"
+              title="Pass the previous lesson's assessment to unlock"
             >
               {inner}
-            </div>
+            </motion.div>
           ) : (
-            <Link
+            <motion.div
               key={l.id}
-              to="/lessons/$id"
-              params={{ id: l.id }}
-              className="glass flex items-center gap-3 rounded-2xl p-4 hover:border-primary/60"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              transition={{ delay: i * 0.06 }}
             >
-              {inner}
-            </Link>
+              <Link
+                to="/lessons/$id"
+                params={{ id: l.id }}
+                className="glass flex items-center gap-3 rounded-2xl p-4 transition-colors hover:border-primary/60"
+              >
+                {inner}
+              </Link>
+            </motion.div>
           );
         })}
         {lessons && lessons.length === 0 && (
