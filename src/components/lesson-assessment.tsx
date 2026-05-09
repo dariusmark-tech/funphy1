@@ -5,7 +5,7 @@ import { useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { useRefreshProfile } from "@/hooks/use-profile";
-import { ArrowRight, CheckCircle2, ChevronLeft, RotateCw, Sparkles, Trophy, XCircle } from "lucide-react";
+import { ArrowRight, CheckCircle2, ChevronLeft, RotateCw, Trophy, XCircle } from "lucide-react";
 import { toast } from "sonner";
 
 type Question = {
