@@ -11,6 +11,7 @@ import {
   Sigma,
   Lightbulb,
   ArrowRight,
+  Trophy,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -101,13 +102,9 @@ function LessonReader() {
     },
   });
 
-  const handleContinue = async () => {
-    if (!progress?.completed) await complete.mutateAsync();
-    if (next) {
-      navigate({ to: "/lessons/$id", params: { id: next.id } });
-    } else if (lesson) {
-      navigate({ to: "/modules/$id", params: { id: lesson.module_id } });
-    }
+  const handleContinue = () => {
+    if (!lesson) return;
+    navigate({ to: "/lessons/$id/posttest", params: { id: lesson.id } });
   };
 
   const equations = (lesson?.equations as EquationItem[] | null) ?? [];
@@ -277,17 +274,9 @@ function LessonReader() {
               disabled={complete.isPending}
               className="inline-flex flex-[1.4] items-center justify-center gap-1.5 rounded-full bg-primary px-4 py-3 text-sm font-bold text-primary-foreground disabled:opacity-60"
             >
-              {next ? (
-                <>
-                  Continue to Lesson {next.order_index}
-                  <ArrowRight className="h-4 w-4" />
-                </>
-              ) : (
-                <>
-                  <CheckCircle2 className="h-4 w-4" />
-                  Finish Module
-                </>
-              )}
+              <Trophy className="h-4 w-4" />
+              Take Posttest (10 items)
+              <ArrowRight className="h-4 w-4" />
             </button>
           </div>
 
