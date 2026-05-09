@@ -1,7 +1,8 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Play, ChevronLeft, BookOpen } from "lucide-react";
+import { useAuth } from "@/hooks/use-auth";
+import { Play, ChevronLeft, BookOpen, CheckCircle2 } from "lucide-react";
 
 export const Route = createFileRoute("/_app/modules/$id")({
   component: ModuleDetail,
@@ -9,6 +10,9 @@ export const Route = createFileRoute("/_app/modules/$id")({
 
 function ModuleDetail() {
   const { id } = Route.useParams();
+  const router = useRouter();
+  const { user } = useAuth();
+
   const { data: mod } = useQuery({
     queryKey: ["module", id],
     queryFn: async () => {
@@ -29,36 +33,73 @@ function ModuleDetail() {
       return data;
     },
   });
+  const { data: progress } = useQuery({
+    queryKey: ["module-progress", id, user?.id],
+    enabled: !!user,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("user_progress")
+        .select("lesson_id, completed")
+        .eq("user_id", user!.id)
+        .eq("module_id", id);
+      return new Set((data ?? []).filter((p) => p.completed).map((p) => p.lesson_id));
+    },
+  });
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-8">
-      <Link to="/dashboard" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-[var(--neon)]">
+    <div className="mx-auto max-w-md px-4 py-4">
+      <button
+        onClick={() => router.history.back()}
+        className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-primary"
+      >
         <ChevronLeft className="h-4 w-4" /> Back
-      </Link>
+      </button>
+
       {mod && (
-        <div className="mt-4">
-          <span className="text-xs uppercase tracking-wider text-muted-foreground">Module {mod.order_index}</span>
-          <h1 className="text-4xl font-black">{mod.title}</h1>
-          <p className="mt-2 text-muted-foreground">{mod.description}</p>
+        <div className="mt-3">
+          <span className="text-[10px] uppercase tracking-wider text-muted-foreground">
+            Module {mod.order_index}
+          </span>
+          <h1 className="text-3xl font-black leading-tight">{mod.title}</h1>
+          <p className="mt-1 text-sm text-muted-foreground">{mod.description}</p>
         </div>
       )}
 
-      <div className="mt-8 space-y-3">
-        {lessons?.map((l, i) => (
-          <div key={l.id} className="glass flex items-center gap-4 rounded-2xl p-5">
-            <div className="grid h-12 w-12 place-items-center rounded-xl bg-[var(--neon)]/10 text-[var(--neon)]">
-              <BookOpen className="h-5 w-5" />
-            </div>
-            <div className="flex-1">
-              <div className="text-xs text-muted-foreground">Lesson {i + 1}</div>
-              <h3 className="font-bold">{l.title}</h3>
-              <p className="text-sm text-muted-foreground line-clamp-1">{l.text_content}</p>
-            </div>
-            <button className="inline-flex items-center gap-1 rounded-full bg-[var(--neon)] px-4 py-2 text-sm font-bold text-primary-foreground shadow-[var(--shadow-glow)]">
-              <Play className="h-3.5 w-3.5" /> Start
-            </button>
-          </div>
-        ))}
+      <div className="mt-5 space-y-2.5">
+        {lessons?.map((l, i) => {
+          const done = progress?.has(l.id);
+          return (
+            <Link
+              key={l.id}
+              to="/lessons/$id"
+              params={{ id: l.id }}
+              className="glass flex items-center gap-3 rounded-2xl p-4 hover:border-primary/60"
+            >
+              <div
+                className="grid h-11 w-11 place-items-center rounded-xl"
+                style={{
+                  background: done ? "color-mix(in oklab, var(--primary) 15%, transparent)" : "color-mix(in oklab, var(--accent) 12%, transparent)",
+                  border: `1px solid ${done ? "var(--primary)" : "color-mix(in oklab, var(--accent) 35%, transparent)"}`,
+                }}
+              >
+                {done ? (
+                  <CheckCircle2 className="h-5 w-5 text-primary" />
+                ) : (
+                  <BookOpen className="h-5 w-5 text-accent" />
+                )}
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                  Lesson {i + 1}
+                </div>
+                <h3 className="truncate font-bold">{l.title}</h3>
+              </div>
+              <span className="inline-flex items-center gap-1 rounded-full bg-primary px-3 py-1.5 text-xs font-bold text-primary-foreground">
+                <Play className="h-3 w-3" /> {done ? "Review" : "Start"}
+              </span>
+            </Link>
+          );
+        })}
         {lessons && lessons.length === 0 && (
           <div className="glass rounded-2xl p-8 text-center text-sm text-muted-foreground">
             More lessons coming soon for this module.
