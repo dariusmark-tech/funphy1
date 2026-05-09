@@ -5,12 +5,12 @@ export const Route = createFileRoute("/_app/learning")({
   component: LearningLayout,
 });
 
-const TABS = [
+const TABS: { to: any; label: string; icon: any; exact?: boolean }[] = [
   { to: "/learning", label: "Modules", icon: BookOpen, exact: true },
   { to: "/learning/videos", label: "Videos", icon: Video },
   { to: "/learning/references", label: "References", icon: FileText },
   { to: "/learning/notes", label: "My Notes", icon: NotebookPen },
-] as const;
+];
 
 function LearningLayout() {
   const path = useRouterState({ select: (s) => s.location.pathname });

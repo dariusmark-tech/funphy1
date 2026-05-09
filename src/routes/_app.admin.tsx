@@ -17,11 +17,11 @@ export const Route = createFileRoute("/_app/admin")({
   component: AdminLayout,
 });
 
-const TABS = [
+const TABS: { to: any; label: string; icon: any; exact?: boolean }[] = [
   { to: "/admin", label: "Dashboard", icon: Calendar, exact: true },
   { to: "/admin/users", label: "Users", icon: Users },
   { to: "/admin/settings", label: "Settings", icon: SettingsIcon },
-] as const;
+];
 
 function AdminLayout() {
   const path = useRouterState({ select: (s) => s.location.pathname });
