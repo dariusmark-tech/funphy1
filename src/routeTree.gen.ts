@@ -13,6 +13,7 @@ import { Route as PlacementRouteImport } from './routes/placement'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppVectorRacerRouteImport } from './routes/_app.vector-racer'
 import { Route as AppShopRouteImport } from './routes/_app.shop'
 import { Route as AppProfileRouteImport } from './routes/_app.profile'
 import { Route as AppPracticeRouteImport } from './routes/_app.practice'
@@ -52,6 +53,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AppVectorRacerRoute = AppVectorRacerRouteImport.update({
+  id: '/vector-racer',
+  path: '/vector-racer',
+  getParentRoute: () => AppRoute,
 } as any)
 const AppShopRoute = AppShopRouteImport.update({
   id: '/shop',
@@ -167,6 +173,7 @@ export interface FileRoutesByFullPath {
   '/practice': typeof AppPracticeRoute
   '/profile': typeof AppProfileRoute
   '/shop': typeof AppShopRoute
+  '/vector-racer': typeof AppVectorRacerRoute
   '/admin/settings': typeof AppAdminSettingsRoute
   '/admin/users': typeof AppAdminUsersRoute
   '/learning/notes': typeof AppLearningNotesRoute
@@ -190,6 +197,7 @@ export interface FileRoutesByTo {
   '/practice': typeof AppPracticeRoute
   '/profile': typeof AppProfileRoute
   '/shop': typeof AppShopRoute
+  '/vector-racer': typeof AppVectorRacerRoute
   '/admin/settings': typeof AppAdminSettingsRoute
   '/admin/users': typeof AppAdminUsersRoute
   '/learning/notes': typeof AppLearningNotesRoute
@@ -217,6 +225,7 @@ export interface FileRoutesById {
   '/_app/practice': typeof AppPracticeRoute
   '/_app/profile': typeof AppProfileRoute
   '/_app/shop': typeof AppShopRoute
+  '/_app/vector-racer': typeof AppVectorRacerRoute
   '/_app/admin/settings': typeof AppAdminSettingsRoute
   '/_app/admin/users': typeof AppAdminUsersRoute
   '/_app/learning/notes': typeof AppLearningNotesRoute
@@ -244,6 +253,7 @@ export interface FileRouteTypes {
     | '/practice'
     | '/profile'
     | '/shop'
+    | '/vector-racer'
     | '/admin/settings'
     | '/admin/users'
     | '/learning/notes'
@@ -267,6 +277,7 @@ export interface FileRouteTypes {
     | '/practice'
     | '/profile'
     | '/shop'
+    | '/vector-racer'
     | '/admin/settings'
     | '/admin/users'
     | '/learning/notes'
@@ -293,6 +304,7 @@ export interface FileRouteTypes {
     | '/_app/practice'
     | '/_app/profile'
     | '/_app/shop'
+    | '/_app/vector-racer'
     | '/_app/admin/settings'
     | '/_app/admin/users'
     | '/_app/learning/notes'
@@ -342,6 +354,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_app/vector-racer': {
+      id: '/_app/vector-racer'
+      path: '/vector-racer'
+      fullPath: '/vector-racer'
+      preLoaderRoute: typeof AppVectorRacerRouteImport
+      parentRoute: typeof AppRoute
     }
     '/_app/shop': {
       id: '/_app/shop'
@@ -544,6 +563,7 @@ interface AppRouteChildren {
   AppPracticeRoute: typeof AppPracticeRoute
   AppProfileRoute: typeof AppProfileRoute
   AppShopRoute: typeof AppShopRoute
+  AppVectorRacerRoute: typeof AppVectorRacerRoute
   AppLessonsIdRoute: typeof AppLessonsIdRouteWithChildren
   AppModulesIdRoute: typeof AppModulesIdRoute
 }
@@ -558,6 +578,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppPracticeRoute: AppPracticeRoute,
   AppProfileRoute: AppProfileRoute,
   AppShopRoute: AppShopRoute,
+  AppVectorRacerRoute: AppVectorRacerRoute,
   AppLessonsIdRoute: AppLessonsIdRouteWithChildren,
   AppModulesIdRoute: AppModulesIdRoute,
 }
