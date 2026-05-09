@@ -1,9 +1,11 @@
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
+import { ChevronLeft } from "lucide-react";
+import logo from "@/assets/funphy-logo.png";
 
 export const Route = createFileRoute("/login")({
   beforeLoad: async () => {
@@ -13,106 +15,235 @@ export const Route = createFileRoute("/login")({
   component: LoginPage,
 });
 
+type View = "welcome" | "signin" | "signup";
+
 function LoginPage() {
   const nav = useNavigate();
-  const [mode, setMode] = useState<"signin" | "signup">("signin");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [view, setView] = useState<View>("welcome");
   const [busy, setBusy] = useState(false);
 
-  const submit = async (e: React.FormEvent) => {
+  // signin
+  const [siEmail, setSiEmail] = useState("");
+  const [siPwd, setSiPwd] = useState("");
+
+  // signup
+  const [suEmail, setSuEmail] = useState("");
+  const [suUser, setSuUser] = useState("");
+  const [suPwd, setSuPwd] = useState("");
+  const [suPwd2, setSuPwd2] = useState("");
+  const [remember, setRemember] = useState(false);
+
+  const signIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setBusy(true);
     try {
-      if (mode === "signup") {
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: { emailRedirectTo: window.location.origin + "/dashboard" },
-        });
-        if (error) throw error;
-        toast.success("Account created — signing you in!");
-      } else {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
-      }
+      const { error } = await supabase.auth.signInWithPassword({ email: siEmail, password: siPwd });
+      if (error) throw error;
       nav({ to: "/dashboard" });
     } catch (err: any) {
-      toast.error(err.message || "Something went wrong");
+      toast.error(err.message);
     } finally {
       setBusy(false);
     }
   };
 
-  const google = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: { redirectTo: window.location.origin + "/dashboard" },
-    });
-    if (error) toast.error(error.message);
+  const signUp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (suPwd !== suPwd2) return toast.error("Passwords don't match");
+    setBusy(true);
+    try {
+      const { error } = await supabase.auth.signUp({
+        email: suEmail,
+        password: suPwd,
+        options: {
+          emailRedirectTo: window.location.origin + "/dashboard",
+          data: { display_name: suUser },
+        },
+      });
+      if (error) throw error;
+      toast.success("Account created!");
+      nav({ to: "/placement" });
+    } catch (err: any) {
+      toast.error(err.message);
+    } finally {
+      setBusy(false);
+    }
   };
 
   return (
-    <div className="relative grid min-h-screen place-items-center overflow-hidden px-6">
-      <div className="grid-bg absolute inset-0 opacity-30" />
-      <div className="pointer-events-none absolute -top-40 left-1/2 h-[420px] w-[820px] -translate-x-1/2 rounded-full bg-[var(--neon)]/20 blur-[120px]" />
+    <div className="relative grid min-h-screen place-items-center overflow-hidden bg-background px-6">
+      <div className="pointer-events-none absolute -top-40 left-1/2 h-[420px] w-[820px] -translate-x-1/2 rounded-full bg-primary/15 blur-[120px]" />
       <Toaster />
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="glass relative z-10 w-full max-w-sm rounded-2xl p-8"
-      >
-        <h1 className="text-2xl font-black">
-          {mode === "signin" ? "Welcome back" : "Create account"}
-        </h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          {mode === "signin" ? "Continue your physics climb." : "Start your physics climb today."}
+      <div className="relative z-10 w-full max-w-sm">
+        <AnimatePresence mode="wait">
+          {view === "welcome" && (
+            <motion.div
+              key="welcome"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              className="flex flex-col items-center text-center"
+            >
+              <img src={logo} alt="FUNPHY" className="h-24 w-24 drop-shadow-lg" />
+              <h1 className="mt-4 text-5xl font-black tracking-tight">Hello!</h1>
+              <p className="mt-2 text-base italic text-muted-foreground">
+                Let's start your Physics Journey
+              </p>
+
+              <div className="mt-10 w-full space-y-3">
+                <button
+                  onClick={() => setView("signin")}
+                  className="w-full rounded-full border-2 border-primary bg-background px-6 py-3.5 text-base font-bold text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
+                >
+                  Log In
+                </button>
+                <button
+                  onClick={() => setView("signup")}
+                  className="w-full rounded-full bg-primary px-6 py-3.5 text-base font-bold text-primary-foreground shadow-lg shadow-primary/30 hover:bg-primary/90"
+                >
+                  Sign Up
+                </button>
+              </div>
+            </motion.div>
+          )}
+
+          {view === "signin" && (
+            <motion.form
+              key="signin"
+              onSubmit={signIn}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              className="rounded-3xl border border-border bg-card/80 p-7 shadow-xl backdrop-blur"
+            >
+              <button
+                type="button"
+                onClick={() => setView("welcome")}
+                className="mb-3 inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-primary"
+              >
+                <ChevronLeft className="h-3 w-3" /> Back
+              </button>
+              <h2 className="text-center text-2xl font-black italic">Welcome back! User</h2>
+
+              <label className="mt-6 block text-sm font-bold">Username</label>
+              <input
+                type="email"
+                required
+                placeholder="email@example.com"
+                value={siEmail}
+                onChange={(e) => setSiEmail(e.target.value)}
+                className="mt-1.5 w-full rounded-full border border-border bg-background px-4 py-2.5 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+              />
+
+              <label className="mt-4 block text-sm font-bold">Password</label>
+              <input
+                type="password"
+                required
+                minLength={6}
+                value={siPwd}
+                onChange={(e) => setSiPwd(e.target.value)}
+                className="mt-1.5 w-full rounded-full border border-border bg-background px-4 py-2.5 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+              />
+
+              <div className="mt-2 flex justify-end">
+                <button type="button" className="text-xs text-muted-foreground hover:text-primary">
+                  Forgot Password?
+                </button>
+              </div>
+
+              <button
+                disabled={busy}
+                className="mx-auto mt-5 block rounded-full border-2 border-primary bg-background px-10 py-2.5 font-bold text-primary hover:bg-primary hover:text-primary-foreground disabled:opacity-50"
+              >
+                {busy ? "..." : "Log In"}
+              </button>
+
+              <p className="mt-6 text-center text-xs text-muted-foreground">
+                Don't have an account?{" "}
+                <button
+                  type="button"
+                  onClick={() => setView("signup")}
+                  className="font-bold text-primary underline"
+                >
+                  SIGN UP
+                </button>
+              </p>
+            </motion.form>
+          )}
+
+          {view === "signup" && (
+            <motion.form
+              key="signup"
+              onSubmit={signUp}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              className="rounded-3xl border border-border bg-card/80 p-7 shadow-xl backdrop-blur"
+            >
+              <button
+                type="button"
+                onClick={() => setView("welcome")}
+                className="mb-3 inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-primary"
+              >
+                <ChevronLeft className="h-3 w-3" /> Back
+              </button>
+              <h2 className="text-center text-2xl font-black">Create an Account</h2>
+
+              {[
+                { label: "Email", v: suEmail, set: setSuEmail, type: "email" },
+                { label: "Username", v: suUser, set: setSuUser, type: "text" },
+                { label: "Password", v: suPwd, set: setSuPwd, type: "password" },
+                { label: "Re-enter Password", v: suPwd2, set: setSuPwd2, type: "password" },
+              ].map((f) => (
+                <div key={f.label} className="mt-3">
+                  <label className="block text-sm font-bold">{f.label}</label>
+                  <input
+                    type={f.type}
+                    required
+                    minLength={f.type === "password" ? 6 : undefined}
+                    value={f.v}
+                    onChange={(e) => f.set(e.target.value)}
+                    className="mt-1.5 w-full rounded-full border border-border bg-background px-4 py-2.5 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+                  />
+                </div>
+              ))}
+
+              <div className="mt-4 flex items-center justify-between">
+                <button
+                  disabled={busy}
+                  className="rounded-full bg-primary px-8 py-2.5 font-bold text-primary-foreground shadow-lg shadow-primary/30 disabled:opacity-50"
+                >
+                  {busy ? "..." : "Sign Up"}
+                </button>
+                <label className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <input
+                    type="checkbox"
+                    checked={remember}
+                    onChange={(e) => setRemember(e.target.checked)}
+                    className="h-3 w-3"
+                  />
+                  Remember Me
+                </label>
+              </div>
+
+              <p className="mt-5 text-center text-xs text-muted-foreground">
+                Already have an account?{" "}
+                <button
+                  type="button"
+                  onClick={() => setView("signin")}
+                  className="font-bold text-primary underline"
+                >
+                  LOG IN
+                </button>
+              </p>
+            </motion.form>
+          )}
+        </AnimatePresence>
+
+        <p className="mt-8 text-center text-[10px] text-muted-foreground">
+          © Batch 2026 AP4 Group 11 | All rights reserved
         </p>
-
-        <button
-          onClick={google}
-          className="mt-6 w-full rounded-lg border border-border bg-background/40 px-4 py-2.5 text-sm font-medium hover:border-[var(--neon)]"
-        >
-          Continue with Google
-        </button>
-
-        <div className="my-5 flex items-center gap-3 text-xs text-muted-foreground">
-          <div className="h-px flex-1 bg-border" /> or <div className="h-px flex-1 bg-border" />
-        </div>
-
-        <form onSubmit={submit} className="space-y-3">
-          <input
-            type="email"
-            required
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full rounded-lg border border-input bg-background/60 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--neon)]/40"
-          />
-          <input
-            type="password"
-            required
-            minLength={6}
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full rounded-lg border border-input bg-background/60 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--neon)]/40"
-          />
-          <button
-            disabled={busy}
-            className="w-full rounded-lg bg-[var(--neon)] px-4 py-2.5 font-bold text-primary-foreground shadow-[var(--shadow-glow)] disabled:opacity-50"
-          >
-            {busy ? "..." : mode === "signin" ? "Sign in" : "Create account"}
-          </button>
-        </form>
-
-        <button
-          onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
-          className="mt-5 w-full text-center text-xs text-muted-foreground hover:text-[var(--neon)]"
-        >
-          {mode === "signin" ? "Don't have an account? Sign up" : "Already have an account? Sign in"}
-        </button>
-      </motion.div>
+      </div>
     </div>
   );
 }
