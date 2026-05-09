@@ -25,6 +25,7 @@ import { Route as AppAdminRouteImport } from './routes/_app.admin'
 import { Route as AppLearningIndexRouteImport } from './routes/_app.learning.index'
 import { Route as AppAdminIndexRouteImport } from './routes/_app.admin.index'
 import { Route as AppModulesIdRouteImport } from './routes/_app.modules.$id'
+import { Route as AppLessonsIdRouteImport } from './routes/_app.lessons.$id'
 import { Route as AppLearningVideosRouteImport } from './routes/_app.learning.videos'
 import { Route as AppLearningReferencesRouteImport } from './routes/_app.learning.references'
 import { Route as AppLearningNotesRouteImport } from './routes/_app.learning.notes'
@@ -110,6 +111,11 @@ const AppModulesIdRoute = AppModulesIdRouteImport.update({
   path: '/modules/$id',
   getParentRoute: () => AppRoute,
 } as any)
+const AppLessonsIdRoute = AppLessonsIdRouteImport.update({
+  id: '/lessons/$id',
+  path: '/lessons/$id',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppLearningVideosRoute = AppLearningVideosRouteImport.update({
   id: '/videos',
   path: '/videos',
@@ -154,6 +160,7 @@ export interface FileRoutesByFullPath {
   '/learning/notes': typeof AppLearningNotesRoute
   '/learning/references': typeof AppLearningReferencesRoute
   '/learning/videos': typeof AppLearningVideosRoute
+  '/lessons/$id': typeof AppLessonsIdRoute
   '/modules/$id': typeof AppModulesIdRoute
   '/admin/': typeof AppAdminIndexRoute
   '/learning/': typeof AppLearningIndexRoute
@@ -174,6 +181,7 @@ export interface FileRoutesByTo {
   '/learning/notes': typeof AppLearningNotesRoute
   '/learning/references': typeof AppLearningReferencesRoute
   '/learning/videos': typeof AppLearningVideosRoute
+  '/lessons/$id': typeof AppLessonsIdRoute
   '/modules/$id': typeof AppModulesIdRoute
   '/admin': typeof AppAdminIndexRoute
   '/learning': typeof AppLearningIndexRoute
@@ -198,6 +206,7 @@ export interface FileRoutesById {
   '/_app/learning/notes': typeof AppLearningNotesRoute
   '/_app/learning/references': typeof AppLearningReferencesRoute
   '/_app/learning/videos': typeof AppLearningVideosRoute
+  '/_app/lessons/$id': typeof AppLessonsIdRoute
   '/_app/modules/$id': typeof AppModulesIdRoute
   '/_app/admin/': typeof AppAdminIndexRoute
   '/_app/learning/': typeof AppLearningIndexRoute
@@ -222,6 +231,7 @@ export interface FileRouteTypes {
     | '/learning/notes'
     | '/learning/references'
     | '/learning/videos'
+    | '/lessons/$id'
     | '/modules/$id'
     | '/admin/'
     | '/learning/'
@@ -242,6 +252,7 @@ export interface FileRouteTypes {
     | '/learning/notes'
     | '/learning/references'
     | '/learning/videos'
+    | '/lessons/$id'
     | '/modules/$id'
     | '/admin'
     | '/learning'
@@ -265,6 +276,7 @@ export interface FileRouteTypes {
     | '/_app/learning/notes'
     | '/_app/learning/references'
     | '/_app/learning/videos'
+    | '/_app/lessons/$id'
     | '/_app/modules/$id'
     | '/_app/admin/'
     | '/_app/learning/'
@@ -391,6 +403,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppModulesIdRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/lessons/$id': {
+      id: '/_app/lessons/$id'
+      path: '/lessons/$id'
+      fullPath: '/lessons/$id'
+      preLoaderRoute: typeof AppLessonsIdRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/learning/videos': {
       id: '/_app/learning/videos'
       path: '/videos'
@@ -473,6 +492,7 @@ interface AppRouteChildren {
   AppPracticeRoute: typeof AppPracticeRoute
   AppProfileRoute: typeof AppProfileRoute
   AppShopRoute: typeof AppShopRoute
+  AppLessonsIdRoute: typeof AppLessonsIdRoute
   AppModulesIdRoute: typeof AppModulesIdRoute
 }
 
@@ -486,6 +506,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppPracticeRoute: AppPracticeRoute,
   AppProfileRoute: AppProfileRoute,
   AppShopRoute: AppShopRoute,
+  AppLessonsIdRoute: AppLessonsIdRoute,
   AppModulesIdRoute: AppModulesIdRoute,
 }
 
