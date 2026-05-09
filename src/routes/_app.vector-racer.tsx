@@ -6,7 +6,7 @@ import { useSettings } from "@/hooks/use-settings";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 
-export const Route = createFileRoute("/_app/mini-games/vector-racer")({
+export const Route = createFileRoute("/_app/vector-racer")({
   component: VectorRacer,
 });
 
