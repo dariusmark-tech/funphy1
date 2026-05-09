@@ -5,7 +5,6 @@ import { useAuth } from "@/hooks/use-auth";
 import { useRefreshProfile } from "@/hooks/use-profile";
 import {
   ChevronLeft,
-  CheckCircle2,
   BookOpen,
   PlayCircle,
   Sigma,
@@ -104,7 +103,7 @@ function LessonReader() {
 
   const handleContinue = () => {
     if (!lesson) return;
-    navigate({ to: "/lessons/$id/posttest", params: { id: lesson.id } });
+    navigate({ to: "/lessons/$id/assessment", params: { id: lesson.id } });
   };
 
   const equations = (lesson?.equations as EquationItem[] | null) ?? [];
@@ -187,33 +186,6 @@ function LessonReader() {
             </article>
           </section>
 
-          {/* Diagram */}
-          {lesson.diagram_url && (
-            <section className="mt-5">
-              <div className="mb-2 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-accent">
-                Diagram
-              </div>
-              <div className="overflow-hidden rounded-2xl border border-border bg-white p-3">
-                <img
-                  src={`https://wsrv.nl/?url=${encodeURIComponent(lesson.diagram_url)}&w=800&output=png`}
-                  alt={`${lesson.title} diagram`}
-                  className="mx-auto max-h-72 w-auto object-contain"
-                  loading="lazy"
-                  referrerPolicy="no-referrer"
-                  onError={(e) => {
-                    const img = e.currentTarget as HTMLImageElement;
-                    if (!img.dataset.fallback) {
-                      img.dataset.fallback = "1";
-                      img.src = lesson.diagram_url!;
-                    } else {
-                      img.style.display = "none";
-                    }
-                  }}
-                />
-              </div>
-            </section>
-          )}
-
           {/* Equations */}
           {equations.length > 0 && (
             <section className="mt-5">
@@ -285,7 +257,7 @@ function LessonReader() {
               className="inline-flex items-center justify-center gap-1.5 rounded-full bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground shadow-sm transition-opacity hover:opacity-90"
             >
               <Trophy className="h-3.5 w-3.5" />
-              Posttest
+              Assessment
               <ArrowRight className="h-3.5 w-3.5" />
             </button>
           </div>
