@@ -1,22 +1,18 @@
 import { createFileRoute, useRouter, Link } from "@tanstack/react-router";
 import { useAuth } from "@/hooks/use-auth";
 import { useProfile } from "@/hooks/use-profile";
+import { useSettings } from "@/hooks/use-settings";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useState } from "react";
 import {
-  Bell,
-  Volume2,
-  Palette,
-  Info,
-  RefreshCw,
-  LogOut,
-  Trash2,
-  ShieldCheck,
-  ShoppingBag,
-  Dumbbell,
-  User as UserIcon,
+  Bell, Volume2, Palette, Info, RefreshCw, LogOut, Trash2,
+  ShieldCheck, ShoppingBag, Dumbbell, User as UserIcon,
 } from "lucide-react";
+import {
+  Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle,
+} from "@/components/ui/dialog";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/_app/menu")({
   component: MenuPage,
@@ -26,9 +22,10 @@ function MenuPage() {
   const { user, signOut } = useAuth();
   const { data: profile } = useProfile();
   const router = useRouter();
-  const [appearance, setAppearance] = useState(true);
-  const [notifications, setNotifications] = useState(true);
-  const [sounds, setSounds] = useState(true);
+  const settings = useSettings();
+  const [credits, setCredits] = useState(false);
+  const [delOpen, setDelOpen] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   const { data: isAdmin } = useQuery({
     queryKey: ["is-admin", user?.id],
@@ -38,6 +35,26 @@ function MenuPage() {
       return !!data;
     },
   });
+
+  const onDelete = async () => {
+    if (!user) return;
+    setDeleting(true);
+    try {
+      // Best-effort wipe of user-owned rows (RLS-protected so safe).
+      await supabase.from("notes").delete().eq("user_id", user.id);
+      await supabase.from("user_progress").delete().eq("user_id", user.id);
+      await supabase.from("transactions").delete().eq("user_id", user.id);
+      await supabase.from("game_scores").delete().eq("user_id", user.id);
+      toast.success("Your data was removed", { description: "Signing you out." });
+      await signOut();
+      router.navigate({ to: "/" });
+    } catch (e: any) {
+      toast.error("Could not delete account", { description: e?.message ?? "Try again later." });
+    } finally {
+      setDeleting(false);
+      setDelOpen(false);
+    }
+  };
 
   return (
     <div className="mx-auto max-w-md px-4 py-6">
@@ -50,9 +67,30 @@ function MenuPage() {
       </div>
 
       <div className="glass mt-4 divide-y divide-border/60 rounded-2xl">
-        <Toggle icon={Palette} label="Appearance (Dark)" value={appearance} onChange={setAppearance} />
-        <Toggle icon={Bell} label="Notifications" value={notifications} onChange={setNotifications} />
-        <Toggle icon={Volume2} label="Sounds" value={sounds} onChange={setSounds} />
+        <Toggle
+          icon={Palette}
+          label={`Appearance (${settings.appearance === "dark" ? "Dark" : "Light"})`}
+          value={settings.appearance === "dark"}
+          onChange={(v) => settings.setAppearance(v ? "dark" : "light")}
+        />
+        <Toggle
+          icon={Bell}
+          label="Notifications"
+          value={settings.notifications}
+          onChange={(v) => {
+            settings.setNotifications(v);
+            if (v) settings.notify("Notifications on", "You'll get learning reminders.");
+          }}
+        />
+        <Toggle
+          icon={Volume2}
+          label="Sounds"
+          value={settings.sounds}
+          onChange={(v) => {
+            settings.setSounds(v);
+            if (v) setTimeout(() => settings.playBeep(), 50);
+          }}
+        />
       </div>
 
       <div className="mt-4 grid grid-cols-3 gap-2">
@@ -68,10 +106,7 @@ function MenuPage() {
       </div>
 
       {isAdmin && (
-        <Link
-          to="/admin"
-          className="glass mt-4 flex items-center gap-3 rounded-2xl p-4 hover:border-[var(--neon)]/60"
-        >
+        <Link to="/admin" className="glass mt-4 flex items-center gap-3 rounded-2xl p-4 hover:border-[var(--neon)]/60">
           <ShieldCheck className="h-5 w-5 text-[var(--neon)]" />
           <div className="flex-1">
             <p className="text-sm font-bold">Admin Dashboard</p>
@@ -81,37 +116,63 @@ function MenuPage() {
       )}
 
       <div className="glass mt-4 divide-y divide-border/60 rounded-2xl">
-        <Row icon={Info} label="Credits" />
-        <Row icon={RefreshCw} label="Switch Account" onClick={async () => { await signOut(); router.navigate({ to: "/login" }); }} />
+        <Row icon={Info} label="Credits" onClick={() => setCredits(true)} />
+        <Row
+          icon={RefreshCw}
+          label="Switch Account"
+          onClick={async () => { await signOut(); router.navigate({ to: "/login" }); }}
+        />
         <Row
           icon={LogOut}
           label="Log Out"
-          onClick={async () => {
-            await signOut();
-            router.navigate({ to: "/" });
-          }}
+          onClick={async () => { await signOut(); router.navigate({ to: "/" }); }}
         />
-        <Row icon={Trash2} label="Delete Account" danger />
+        <Row icon={Trash2} label="Delete Account" danger onClick={() => setDelOpen(true)} />
       </div>
 
       <p className="mt-6 text-center text-[10px] text-muted-foreground">
         Batch 2026 AP4 Group 11 · All rights reserved
       </p>
+
+      <Dialog open={credits} onOpenChange={setCredits}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Credits</DialogTitle>
+            <DialogDescription>FUNPHY1 — Fundamental Physics 1</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-2 text-sm">
+            <p><span className="font-bold">Team:</span> Batch 2026 · AP4 · Group 11</p>
+            <p><span className="font-bold">Stack:</span> React · TanStack Start · Lovable Cloud</p>
+            <p className="text-muted-foreground">Built with love for learning physics.</p>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={delOpen} onOpenChange={setDelOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete account?</DialogTitle>
+            <DialogDescription>
+              This will permanently remove your progress, notes and game scores. You'll be signed out.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <button onClick={() => setDelOpen(false)} className="rounded-full border border-border px-4 py-2 text-sm">Cancel</button>
+            <button
+              onClick={onDelete}
+              disabled={deleting}
+              className="rounded-full bg-destructive px-4 py-2 text-sm font-bold text-destructive-foreground disabled:opacity-50"
+            >
+              {deleting ? "Deleting..." : "Delete"}
+            </button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
 
-function Toggle({
-  icon: Icon,
-  label,
-  value,
-  onChange,
-}: {
-  icon: any;
-  label: string;
-  value: boolean;
-  onChange: (v: boolean) => void;
-}) {
+function Toggle({ icon: Icon, label, value, onChange }: { icon: any; label: string; value: boolean; onChange: (v: boolean) => void; }) {
   return (
     <div className="flex items-center gap-3 px-4 py-3">
       <Icon className="h-4 w-4 text-muted-foreground" />
@@ -120,34 +181,15 @@ function Toggle({
         onClick={() => onChange(!value)}
         className={`relative h-6 w-11 rounded-full transition-colors ${value ? "bg-[var(--neon)]" : "bg-muted"}`}
       >
-        <span
-          className={`absolute top-0.5 h-5 w-5 rounded-full bg-background transition-transform ${
-            value ? "translate-x-5" : "translate-x-0.5"
-          }`}
-        />
+        <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-background transition-transform ${value ? "translate-x-5" : "translate-x-0.5"}`} />
       </button>
     </div>
   );
 }
 
-function Row({
-  icon: Icon,
-  label,
-  onClick,
-  danger,
-}: {
-  icon: any;
-  label: string;
-  onClick?: () => void;
-  danger?: boolean;
-}) {
+function Row({ icon: Icon, label, onClick, danger }: { icon: any; label: string; onClick?: () => void; danger?: boolean; }) {
   return (
-    <button
-      onClick={onClick}
-      className={`flex w-full items-center gap-3 px-4 py-3 text-left text-sm hover:bg-muted/30 ${
-        danger ? "text-destructive" : ""
-      }`}
-    >
+    <button onClick={onClick} className={`flex w-full items-center gap-3 px-4 py-3 text-left text-sm hover:bg-muted/30 ${danger ? "text-destructive" : ""}`}>
       <Icon className="h-4 w-4" />
       <span className="flex-1">{label}</span>
     </button>
