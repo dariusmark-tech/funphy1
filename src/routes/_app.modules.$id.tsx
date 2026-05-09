@@ -2,7 +2,7 @@ import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
-import { Play, ChevronLeft, BookOpen, CheckCircle2 } from "lucide-react";
+import { Play, ChevronLeft, BookOpen, CheckCircle2, Lock } from "lucide-react";
 
 export const Route = createFileRoute("/_app/modules/$id")({
   component: ModuleDetail,
