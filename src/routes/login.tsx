@@ -104,6 +104,13 @@ function LoginPage() {
                   Sign Up
                 </button>
               </div>
+
+              <button
+                onClick={() => nav({ to: "/admin-login" })}
+                className="mt-5 text-[13px] text-muted-foreground underline underline-offset-2 hover:text-primary"
+              >
+                Are you a Professor or Admin? Admin Login →
+              </button>
             </motion.div>
           )}
 
