@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
 import logo from "@/assets/funphy-logo.png";
+import { useForceLight } from "@/hooks/use-force-light";
 
 export const Route = createFileRoute("/admin-login")({
   beforeLoad: async () => {
