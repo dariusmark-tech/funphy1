@@ -19,6 +19,7 @@ export const Route = createFileRoute("/login")({
 type View = "welcome" | "signin" | "signup";
 
 function LoginPage() {
+  useForceLight();
   const nav = useNavigate();
   const [view, setView] = useState<View>("welcome");
   const [busy, setBusy] = useState(false);
