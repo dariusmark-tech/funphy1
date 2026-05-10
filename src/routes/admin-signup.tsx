@@ -13,6 +13,7 @@ export const Route = createFileRoute("/admin-signup")({
 });
 
 function AdminSignupPage() {
+  useForceLight();
   const nav = useNavigate();
   const [email, setEmail] = useState("");
   const [user, setUser] = useState("");
