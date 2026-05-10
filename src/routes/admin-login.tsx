@@ -25,6 +25,7 @@ export const Route = createFileRoute("/admin-login")({
 });
 
 function AdminLoginPage() {
+  useForceLight();
   const nav = useNavigate();
   const [email, setEmail] = useState("");
   const [pwd, setPwd] = useState("");
