@@ -26,7 +26,7 @@ const TABS: { to: any; label: string; icon: any; exact?: boolean }[] = [
 function AdminLayout() {
   const path = useRouterState({ select: (s) => s.location.pathname });
   return (
-    <div className="mx-auto max-w-md px-4 py-6">
+    <div className="light mx-auto min-h-screen max-w-md bg-white px-4 py-6 text-slate-900">
       <p className="text-xs uppercase tracking-wider text-[var(--neon)]">Admin</p>
       <h1 className="text-2xl font-black">Welcome Admin</h1>
 
