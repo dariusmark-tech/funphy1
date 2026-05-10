@@ -15,6 +15,7 @@ export type Profile = {
   league: string;
   current_module_id: string | null;
   placement_completed: boolean;
+  avatar_url?: string | null;
 };
 
 export function useProfile() {
