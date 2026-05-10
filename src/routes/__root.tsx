@@ -78,10 +78,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "description", content: "Fundamental Physics 1 (FUNPHY1) — learn mechanics through an adventure game with assessments, levels, and a story conclusion." },
       { name: "author", content: "FUNPHY1" },
       { property: "og:title", content: "FUNPHY1 — Fundamental Physics 1" },
-      { property: "og:description", content: "An adventure game to master Fundamental Physics 1." },
+      { property: "og:description", content: "Fundamental Physics 1 (FUNPHY1) — learn mechanics through an adventure game with assessments, levels, and a story conclusion." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "FUNPHY1 — Fundamental Physics 1" },
+      { name: "twitter:description", content: "Fundamental Physics 1 (FUNPHY1) — learn mechanics through an adventure game with assessments, levels, and a story conclusion." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/6c8a3734-823d-4c9e-bf86-2112525bbd90/id-preview-db4d3ca6--e7339307-48e5-4275-815f-c214efd98490.lovable.app-1778409667212.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/6c8a3734-823d-4c9e-bf86-2112525bbd90/id-preview-db4d3ca6--e7339307-48e5-4275-815f-c214efd98490.lovable.app-1778409667212.png" },
     ],
     links: [
       {
