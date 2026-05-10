@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
 import logo from "@/assets/funphy-logo.png";
+import { useForceLight } from "@/hooks/use-force-light";
 
 export const Route = createFileRoute("/admin-login")({
   beforeLoad: async () => {
@@ -24,6 +25,7 @@ export const Route = createFileRoute("/admin-login")({
 });
 
 function AdminLoginPage() {
+  useForceLight();
   const nav = useNavigate();
   const [email, setEmail] = useState("");
   const [pwd, setPwd] = useState("");
@@ -80,7 +82,7 @@ function AdminLoginPage() {
           placeholder="email@example.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="mt-1.5 w-full rounded-full border border-slate-200 bg-white px-4 py-2.5 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+          className="mt-1.5 w-full rounded-full border border-slate-200 bg-slate-100 px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
         />
 
         <label className="mt-4 block text-sm font-bold">Password</label>
@@ -90,7 +92,7 @@ function AdminLoginPage() {
           minLength={6}
           value={pwd}
           onChange={(e) => setPwd(e.target.value)}
-          className="mt-1.5 w-full rounded-full border border-slate-200 bg-white px-4 py-2.5 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+          className="mt-1.5 w-full rounded-full border border-slate-200 bg-slate-100 px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
         />
 
         <button

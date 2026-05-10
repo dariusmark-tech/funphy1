@@ -2,6 +2,7 @@ import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { Atom, ChevronRight, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { useForceLight } from "@/hooks/use-force-light";
 
 export const Route = createFileRoute("/")({
   beforeLoad: async () => {
@@ -12,10 +13,11 @@ export const Route = createFileRoute("/")({
 });
 
 function Opening() {
+  useForceLight();
   return (
-    <div className="relative grid min-h-screen place-items-center overflow-hidden px-6">
-      <div className="grid-bg absolute inset-0 opacity-30" />
-      <div className="pointer-events-none absolute left-1/2 top-1/2 h-[520px] w-[520px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[var(--neon)]/20 blur-[140px]" />
+    <div className="light relative grid min-h-screen place-items-center overflow-hidden bg-gradient-to-b from-[#EEF2FF] to-[#E0E7FF] px-6 text-slate-900">
+      <div className="grid-bg absolute inset-0 opacity-20" />
+      <div className="pointer-events-none absolute left-1/2 top-1/2 h-[520px] w-[520px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/15 blur-[140px]" />
 
       {/* orbiting atoms */}
       <motion.div

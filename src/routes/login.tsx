@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
 import { ChevronLeft } from "lucide-react";
 import logo from "@/assets/funphy-logo.png";
+import { useForceLight } from "@/hooks/use-force-light";
 
 export const Route = createFileRoute("/login")({
   beforeLoad: async () => {
@@ -18,6 +19,7 @@ export const Route = createFileRoute("/login")({
 type View = "welcome" | "signin" | "signup";
 
 function LoginPage() {
+  useForceLight();
   const nav = useNavigate();
   const [view, setView] = useState<View>("welcome");
   const [busy, setBusy] = useState(false);
@@ -71,7 +73,7 @@ function LoginPage() {
   };
 
   return (
-    <div className="relative grid min-h-screen place-items-center overflow-hidden bg-background px-6">
+    <div className="light relative grid min-h-screen place-items-center overflow-hidden bg-gradient-to-b from-[#EEF2FF] to-[#E0E7FF] px-6 text-slate-900">
       <div className="pointer-events-none absolute -top-40 left-1/2 h-[420px] w-[820px] -translate-x-1/2 rounded-full bg-primary/15 blur-[120px]" />
       <Toaster />
       <div className="relative z-10 w-full max-w-sm">
@@ -143,7 +145,7 @@ function LoginPage() {
                 placeholder="email@example.com"
                 value={siEmail}
                 onChange={(e) => setSiEmail(e.target.value)}
-                className="mt-1.5 w-full rounded-full border border-border bg-background px-4 py-2.5 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+                className="mt-1.5 w-full rounded-full border border-slate-200 bg-slate-100 px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/30"
               />
 
               <label className="mt-4 block text-sm font-bold">Password</label>
@@ -153,7 +155,7 @@ function LoginPage() {
                 minLength={6}
                 value={siPwd}
                 onChange={(e) => setSiPwd(e.target.value)}
-                className="mt-1.5 w-full rounded-full border border-border bg-background px-4 py-2.5 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+                className="mt-1.5 w-full rounded-full border border-slate-200 bg-slate-100 px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/30"
               />
 
               <div className="mt-2 flex justify-end">
@@ -218,7 +220,7 @@ function LoginPage() {
                     minLength={f.type === "password" ? 6 : undefined}
                     value={f.v}
                     onChange={(e) => f.set(e.target.value)}
-                    className="mt-1.5 w-full rounded-full border border-border bg-background px-4 py-2.5 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+                    className="mt-1.5 w-full rounded-full border border-slate-200 bg-slate-100 px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/30"
                   />
                 </div>
               ))}
