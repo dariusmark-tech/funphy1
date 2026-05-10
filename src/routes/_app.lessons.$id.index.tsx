@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/_app/lessons/$id")({
+export const Route = createFileRoute("/_app/lessons/$id/")({
   component: LessonReader,
 });
 
