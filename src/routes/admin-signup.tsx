@@ -93,7 +93,7 @@ function AdminSignupPage() {
               minLength={f.type === "password" ? 6 : undefined}
               value={f.v}
               onChange={(e) => f.set(e.target.value)}
-              className="mt-1.5 w-full rounded-full border border-slate-200 bg-white px-4 py-2.5 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+              className="mt-1.5 w-full rounded-full border border-slate-200 bg-slate-100 px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
             />
           </div>
         ))}
