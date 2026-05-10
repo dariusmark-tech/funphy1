@@ -2,6 +2,7 @@ import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { Atom, ChevronRight, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { useForceLight } from "@/hooks/use-force-light";
 
 export const Route = createFileRoute("/")({
   beforeLoad: async () => {
