@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { useProfile } from "@/hooks/use-profile";
 import { ChevronRight, Map as MapIcon, Trophy, Gem, Sparkles } from "lucide-react";
+import { AvatarBubble, AvatarPicker } from "@/components/avatar-picker";
 
 export const Route = createFileRoute("/_app/dashboard")({
   beforeLoad: async () => {
@@ -18,8 +19,6 @@ export const Route = createFileRoute("/_app/dashboard")({
   },
   component: Home,
 });
-
-const AVATARS = ["🧑‍🚀", "🧑‍🔬", "🧑‍🎓", "🦸", "🧙", "🧝"];
 
 function Home() {
   const { data: profile } = useProfile();
@@ -40,7 +39,6 @@ function Home() {
 
   const xpInLevel = profile.xp % 500;
   const level = Math.floor(profile.xp / 500) + 1;
-  const avatarIdx = (profile.display_name?.charCodeAt(0) ?? 0) % AVATARS.length;
 
   return (
     <div className="mx-auto max-w-md px-4 py-6">
@@ -54,13 +52,16 @@ function Home() {
         <p className="text-xs italic text-muted-foreground">Player username:</p>
         <h1 className="mt-1 text-2xl font-black">{profile.display_name || "Player"}</h1>
         <div className="mt-3 grid place-items-center">
-          <div className="grid h-20 w-20 place-items-center rounded-full bg-gradient-to-br from-[var(--neon)]/20 to-[var(--cyan)]/20 text-4xl ring-2 ring-[var(--neon)]/40">
-            {AVATARS[avatarIdx]}
-          </div>
+          <AvatarBubble profile={profile} size={88} />
         </div>
-        <button className="mt-3 inline-flex items-center gap-1 rounded-full bg-secondary px-3 py-1 text-[11px] font-semibold">
-          <Sparkles className="h-3 w-3" /> Change Avatar
-        </button>
+        <AvatarPicker
+          profile={profile}
+          trigger={
+            <button className="mt-3 inline-flex items-center gap-1 rounded-full bg-secondary px-3 py-1 text-[11px] font-semibold hover:bg-secondary/80">
+              <Sparkles className="h-3 w-3" /> Change Avatar
+            </button>
+          }
+        />
       </motion.div>
 
       {/* Level + progress */}

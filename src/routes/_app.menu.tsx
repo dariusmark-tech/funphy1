@@ -174,14 +174,15 @@ function MenuPage() {
 
 function Toggle({ icon: Icon, label, value, onChange }: { icon: any; label: string; value: boolean; onChange: (v: boolean) => void; }) {
   return (
-    <div className="flex items-center gap-3 px-4 py-3">
-      <Icon className="h-4 w-4 text-muted-foreground" />
-      <span className="flex-1 text-sm">{label}</span>
+    <div className="flex w-full items-center gap-3 px-4 py-4">
+      <Icon className="h-4 w-4 shrink-0 text-muted-foreground" />
+      <span className="flex-1 truncate text-sm">{label}</span>
       <button
         onClick={() => onChange(!value)}
-        className={`relative h-6 w-11 rounded-full transition-colors ${value ? "bg-[var(--neon)]" : "bg-muted"}`}
+        aria-pressed={value}
+        className={`relative ml-auto h-7 w-12 shrink-0 rounded-full transition-colors ${value ? "bg-[var(--neon)]" : "bg-muted"}`}
       >
-        <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-background transition-transform ${value ? "translate-x-5" : "translate-x-0.5"}`} />
+        <span className={`absolute top-0.5 h-6 w-6 rounded-full bg-background shadow transition-transform ${value ? "translate-x-[22px]" : "translate-x-0.5"}`} />
       </button>
     </div>
   );

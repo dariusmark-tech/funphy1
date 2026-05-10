@@ -10,10 +10,10 @@ export function AppHeader() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-border/60 bg-background/85 backdrop-blur-xl">
-      <div className="mx-auto flex max-w-md items-center gap-2 px-3 py-1.5">
-        <Link to="/dashboard" className="flex items-center gap-1.5 shrink-0">
-          <img src={logo} alt="FUNPHY" className="h-8 w-8 object-contain drop-shadow-[0_2px_8px_rgba(99,102,241,0.4)]" />
-          <span className="text-sm font-black leading-none tracking-tight">
+      <div className="mx-auto flex max-w-md items-center gap-2 px-3 py-2">
+        <Link to="/dashboard" className="flex items-center gap-2 shrink-0">
+          <img src={logo} alt="FUNPHY" className="h-10 w-10 object-contain drop-shadow-[0_2px_8px_rgba(99,102,241,0.4)]" />
+          <span className="text-xl font-black leading-none tracking-tight">
             FUN<span className="gradient-text">PHY</span>
           </span>
         </Link>

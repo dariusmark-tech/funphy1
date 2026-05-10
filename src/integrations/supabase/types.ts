@@ -174,6 +174,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          avatar_url: string | null
           created_at: string
           current_module_id: string | null
           display_name: string | null
@@ -192,6 +193,7 @@ export type Database = {
           xp: number
         }
         Insert: {
+          avatar_url?: string | null
           created_at?: string
           current_module_id?: string | null
           display_name?: string | null
@@ -210,6 +212,7 @@ export type Database = {
           xp?: number
         }
         Update: {
+          avatar_url?: string | null
           created_at?: string
           current_module_id?: string | null
           display_name?: string | null

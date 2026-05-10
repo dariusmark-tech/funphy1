@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useProfile } from "@/hooks/use-profile";
 import { useAuth } from "@/hooks/use-auth";
-import { Trophy, Flame, Zap, Award } from "lucide-react";
+import { Trophy, Flame, Zap, Award, Sparkles } from "lucide-react";
+import { AvatarBubble, AvatarPicker } from "@/components/avatar-picker";
 
 export const Route = createFileRoute("/_app/profile")({
   component: ProfilePage,
@@ -23,12 +24,18 @@ function ProfilePage() {
   return (
     <div className="mx-auto max-w-4xl px-4 py-8">
       <div className="glass flex items-center gap-5 rounded-2xl p-6">
-        <div className="grid h-20 w-20 place-items-center rounded-full bg-gradient-to-br from-[var(--neon)] to-[var(--cyan)] text-3xl font-black text-primary-foreground">
-          {(profile.display_name || profile.email || "?")[0].toUpperCase()}
-        </div>
-        <div>
+        <AvatarBubble profile={profile} size={80} />
+        <div className="flex-1">
           <h1 className="text-2xl font-black">{profile.display_name || "Player"}</h1>
           <p className="text-sm text-muted-foreground">{user?.email}</p>
+          <AvatarPicker
+            profile={profile}
+            trigger={
+              <button className="mt-2 inline-flex items-center gap-1 rounded-full bg-secondary px-3 py-1 text-xs font-semibold hover:bg-secondary/80">
+                <Sparkles className="h-3 w-3" /> Change Avatar
+              </button>
+            }
+          />
         </div>
       </div>
 
