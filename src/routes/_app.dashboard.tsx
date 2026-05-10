@@ -20,8 +20,6 @@ export const Route = createFileRoute("/_app/dashboard")({
   component: Home,
 });
 
-const AVATARS = ["🧑‍🚀", "🧑‍🔬", "🧑‍🎓", "🦸", "🧙", "🧝"];
-
 function Home() {
   const { data: profile } = useProfile();
   const { data: quest } = useQuery({
