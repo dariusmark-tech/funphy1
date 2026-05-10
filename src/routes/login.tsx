@@ -73,7 +73,7 @@ function LoginPage() {
   };
 
   return (
-    <div className="relative grid min-h-screen place-items-center overflow-hidden bg-background px-6">
+    <div className="light relative grid min-h-screen place-items-center overflow-hidden bg-gradient-to-b from-[#EEF2FF] to-[#E0E7FF] px-6 text-slate-900">
       <div className="pointer-events-none absolute -top-40 left-1/2 h-[420px] w-[820px] -translate-x-1/2 rounded-full bg-primary/15 blur-[120px]" />
       <Toaster />
       <div className="relative z-10 w-full max-w-sm">
