@@ -11,6 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as PlacementRouteImport } from './routes/placement'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as AdminSignupRouteImport } from './routes/admin-signup'
+import { Route as AdminLoginRouteImport } from './routes/admin-login'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppVectorRacerRouteImport } from './routes/_app.vector-racer'
@@ -44,6 +46,16 @@ const PlacementRoute = PlacementRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminSignupRoute = AdminSignupRouteImport.update({
+  id: '/admin-signup',
+  path: '/admin-signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminLoginRoute = AdminLoginRouteImport.update({
+  id: '/admin-login',
+  path: '/admin-login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppRoute = AppRouteImport.update({
@@ -168,6 +180,8 @@ const AppLessonsIdAssessmentRoute = AppLessonsIdAssessmentRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin-login': typeof AdminLoginRoute
+  '/admin-signup': typeof AdminSignupRoute
   '/login': typeof LoginRoute
   '/placement': typeof PlacementRoute
   '/admin': typeof AppAdminRouteWithChildren
@@ -195,6 +209,8 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin-login': typeof AdminLoginRoute
+  '/admin-signup': typeof AdminSignupRoute
   '/login': typeof LoginRoute
   '/placement': typeof PlacementRoute
   '/dashboard': typeof AppDashboardRoute
@@ -222,6 +238,8 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_app': typeof AppRouteWithChildren
+  '/admin-login': typeof AdminLoginRoute
+  '/admin-signup': typeof AdminSignupRoute
   '/login': typeof LoginRoute
   '/placement': typeof PlacementRoute
   '/_app/admin': typeof AppAdminRouteWithChildren
@@ -251,6 +269,8 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin-login'
+    | '/admin-signup'
     | '/login'
     | '/placement'
     | '/admin'
@@ -278,6 +298,8 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/admin-login'
+    | '/admin-signup'
     | '/login'
     | '/placement'
     | '/dashboard'
@@ -304,6 +326,8 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_app'
+    | '/admin-login'
+    | '/admin-signup'
     | '/login'
     | '/placement'
     | '/_app/admin'
@@ -333,6 +357,8 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
+  AdminLoginRoute: typeof AdminLoginRoute
+  AdminSignupRoute: typeof AdminSignupRoute
   LoginRoute: typeof LoginRoute
   PlacementRoute: typeof PlacementRoute
 }
@@ -351,6 +377,20 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin-signup': {
+      id: '/admin-signup'
+      path: '/admin-signup'
+      fullPath: '/admin-signup'
+      preLoaderRoute: typeof AdminSignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin-login': {
+      id: '/admin-login'
+      path: '/admin-login'
+      fullPath: '/admin-login'
+      preLoaderRoute: typeof AdminLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_app': {
@@ -599,6 +639,8 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
+  AdminLoginRoute: AdminLoginRoute,
+  AdminSignupRoute: AdminSignupRoute,
   LoginRoute: LoginRoute,
   PlacementRoute: PlacementRoute,
 }
