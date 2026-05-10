@@ -180,9 +180,9 @@ function Toggle({ icon: Icon, label, value, onChange }: { icon: any; label: stri
       <button
         onClick={() => onChange(!value)}
         aria-pressed={value}
-        className={`relative ml-auto h-7 w-12 shrink-0 rounded-full transition-colors ${value ? "bg-[var(--neon)]" : "bg-muted"}`}
+        className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors ${value ? "bg-[var(--neon)]" : "bg-muted"}`}
       >
-        <span className={`absolute top-0.5 h-6 w-6 rounded-full bg-background shadow transition-transform ${value ? "translate-x-[22px]" : "translate-x-0.5"}`} />
+        <span className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform ${value ? "translate-x-[22px]" : "translate-x-0.5"}`} />
       </button>
     </div>
   );
