@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useState } from "react";
+import { Users, Filter } from "lucide-react";
 
 export const Route = createFileRoute("/_app/admin/users")({
   component: UsersPage,
@@ -76,26 +77,36 @@ function UsersPage() {
 
   return (
     <div className="space-y-3">
-      {myCode ? (
-        <div className="glass rounded-2xl p-3 text-xs">
-          <span className="text-muted-foreground">Your Professor Code:</span>{" "}
-          <span className="font-black text-[var(--neon)]">{myCode}</span>
-          <p className="mt-1 text-[11px] text-muted-foreground">
-            Share this code with your students so they can link to you.
-          </p>
+      <div className="rounded-2xl border-2 border-slate-300 bg-white p-4 shadow-sm">
+        <div className="flex items-center justify-center gap-2">
+          <Users className="h-4 w-4 text-[var(--neon)]" />
+          <h2 className="text-base font-black italic text-slate-900">Users / Players Status</h2>
         </div>
-      ) : (
-        <div className="glass rounded-2xl p-3 text-xs text-muted-foreground">
-          You don't have a professor code set. Showing all students.
+        <p className="mt-1 text-center text-xs font-bold text-slate-700">Registered Users</p>
+
+        {myCode ? (
+          <div className="mt-3 rounded-xl bg-slate-50 p-2 text-center text-[11px]">
+            <span className="text-slate-600">Your Professor Code:</span>{" "}
+            <span className="font-black text-[var(--neon)]">{myCode}</span>
+          </div>
+        ) : (
+          <div className="mt-3 rounded-xl bg-amber-50 p-2 text-center text-[11px] text-amber-700">
+            No professor code set — showing all students.
+          </div>
+        )}
+
+        <div className="mt-3 flex items-center gap-2 rounded-full border border-slate-300 bg-white px-3 py-1.5">
+          <Filter className="h-3.5 w-3.5 text-slate-500" />
+          <input
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+            placeholder="Filter by name, email, or school ID…"
+            className="w-full bg-transparent text-xs text-slate-900 outline-none placeholder:text-slate-400"
+          />
         </div>
-      )}
-      <input
-        value={filter}
-        onChange={(e) => setFilter(e.target.value)}
-        placeholder="Filter by name, email, or school ID…"
-        className="w-full rounded-full border border-border bg-background/40 px-4 py-2 text-sm outline-none focus:border-[var(--neon)]/60"
-      />
-      <p className="text-xs text-muted-foreground">{filtered?.length ?? 0} students</p>
+        <p className="mt-1 text-right text-[10px] text-slate-500">{filtered?.length ?? 0} students</p>
+      </div>
+
       <ul className="space-y-2">
         {filtered?.map((u) => {
           const active =
@@ -103,45 +114,45 @@ function UsersPage() {
           const level = Math.floor((u.xp ?? 0) / 500) + 1;
           const p = progress?.get(u.id);
           return (
-            <li key={u.id} className="glass rounded-2xl p-3">
+            <li key={u.id} className="rounded-2xl border-2 border-slate-300 bg-white p-3 shadow-sm">
               <div className="flex items-center justify-between gap-2">
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-bold">{u.display_name || "—"}</p>
-                  <p className="truncate text-xs text-muted-foreground">{u.email}</p>
+                  <p className="truncate text-sm font-bold text-slate-900">{u.display_name || "—"}</p>
+                  <p className="truncate text-xs text-slate-600">{u.email}</p>
                   {u.school_id && (
-                    <p className="truncate text-[11px] text-muted-foreground">ID: {u.school_id}</p>
+                    <p className="truncate text-[11px] text-slate-500">ID: {u.school_id}</p>
                   )}
                 </div>
                 <span
                   className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
-                    active ? "bg-[var(--neon)]/15 text-[var(--neon)]" : "bg-muted text-muted-foreground"
+                    active ? "bg-emerald-100 text-emerald-700" : "bg-slate-100 text-slate-500"
                   }`}
                 >
                   {active ? "Active" : "Inactive"}
                 </span>
               </div>
-              <div className="mt-2 flex items-center gap-3 text-[11px] text-muted-foreground">
+              <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px] text-slate-600">
                 <span>Joined {new Date(u.created_at).toLocaleDateString()}</span>
                 <span>·</span>
                 <span>{u.league}</span>
                 <span>·</span>
                 <span>Lvl {level}</span>
                 <span>·</span>
-                <span>{u.xp ?? 0} XP</span>
+                <span className="font-bold text-[var(--neon)]">{u.xp ?? 0} XP</span>
               </div>
               {p && (
                 <div className="mt-2 grid grid-cols-3 gap-2 text-center text-[11px]">
-                  <div className="rounded-lg bg-background/40 py-1">
+                  <div className="rounded-lg bg-slate-50 py-1">
                     <div className="font-black text-[var(--neon)]">{p.completed}</div>
-                    <div className="text-muted-foreground">Lessons</div>
+                    <div className="text-slate-500">Lessons</div>
                   </div>
-                  <div className="rounded-lg bg-background/40 py-1">
+                  <div className="rounded-lg bg-slate-50 py-1">
                     <div className="font-black text-[var(--neon)]">{p.passed}</div>
-                    <div className="text-muted-foreground">Passed</div>
+                    <div className="text-slate-500">Passed</div>
                   </div>
-                  <div className="rounded-lg bg-background/40 py-1">
+                  <div className="rounded-lg bg-slate-50 py-1">
                     <div className="font-black text-[var(--neon)]">{p.avg || "—"}</div>
-                    <div className="text-muted-foreground">Avg %</div>
+                    <div className="text-slate-500">Avg %</div>
                   </div>
                 </div>
               )}
