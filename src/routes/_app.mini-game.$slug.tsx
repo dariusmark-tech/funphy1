@@ -16,10 +16,10 @@ type Q = { q: string; choices: string[]; answer: number; explain?: string };
 
 const GAMES: Record<string, { name: string; color: string; xp: number; gems: number; threshold: number; unlockHint: string; questions: Q[] }> = {
   "force-builder": {
-    name: "Force Builder",
+    name: "Force Diagram Builder",
     color: "var(--cyan)",
-    xp: 25, gems: 6, threshold: 40,
-    unlockHint: "Complete Unit 2 first.",
+    xp: 35, gems: 10, threshold: 150,
+    unlockHint: "Complete Unit 6 first.",
     questions: [
       { q: "A 5 kg box accelerates at 2 m/s². What net force is acting on it?", choices: ["2.5 N", "5 N", "10 N", "25 N"], answer: 2, explain: "F = ma = 5·2 = 10 N" },
       { q: "Two forces, 3 N right and 4 N up, are perpendicular. What is the net force magnitude?", choices: ["1 N", "5 N", "7 N", "12 N"], answer: 1, explain: "√(3²+4²) = 5 N" },
@@ -42,16 +42,55 @@ const GAMES: Record<string, { name: string; color: string; xp: number; gems: num
     ],
   },
   "momentum-crash": {
-    name: "Momentum Crash",
-    color: "var(--streak)",
-    xp: 35, gems: 10, threshold: 120,
-    unlockHint: "Complete Unit 4 first.",
+    name: "Momentum Match",
+    color: "var(--xp)",
+    xp: 35, gems: 10, threshold: 60,
+    unlockHint: "Complete Unit 3 first.",
     questions: [
       { q: "A 2 kg ball at 3 m/s. Momentum?", choices: ["1.5 kg·m/s", "3 kg·m/s", "6 kg·m/s", "9 kg·m/s"], answer: 2, explain: "p = mv = 6" },
       { q: "Inelastic collision: 2 kg @ 4 m/s hits 2 kg at rest, they stick. Final v?", choices: ["1 m/s", "2 m/s", "4 m/s", "8 m/s"], answer: 1, explain: "Conservation: 2·4 = 4·v → v = 2" },
       { q: "Conservation of momentum requires…", choices: ["No external force", "Equal masses", "Same direction", "Elastic only"], answer: 0 },
       { q: "Elastic collision conserves…", choices: ["Only momentum", "Only KE", "Both momentum and KE", "Neither"], answer: 2 },
       { q: "Impulse equals change in…", choices: ["Velocity", "Mass", "Momentum", "Energy"], answer: 2, explain: "J = Δp" },
+    ],
+  },
+  "acceleration-adventure": {
+    name: "Acceleration Adventure",
+    color: "var(--cyan)",
+    xp: 25, gems: 6, threshold: 30,
+    unlockHint: "Complete Unit 2 first.",
+    questions: [
+      { q: "Velocity changes from 0 to 20 m/s in 5 s. Acceleration?", choices: ["2 m/s²", "4 m/s²", "5 m/s²", "100 m/s²"], answer: 1, explain: "a = Δv/Δt = 20/5 = 4" },
+      { q: "Object at 30 m/s decelerates at 5 m/s². Time to stop?", choices: ["3 s", "5 s", "6 s", "15 s"], answer: 2, explain: "t = v/a = 30/5 = 6 s" },
+      { q: "Free fall on Earth has acceleration ≈", choices: ["1.6 m/s²", "9.8 m/s²", "20 m/s²", "0 m/s²"], answer: 1 },
+      { q: "If a v-t graph is a straight horizontal line, acceleration is…", choices: ["Increasing", "Zero", "Negative", "Infinite"], answer: 1 },
+      { q: "Units of acceleration are…", choices: ["m/s", "m/s²", "kg·m/s", "N"], answer: 1 },
+    ],
+  },
+  "energy-transfer": {
+    name: "Energy Transfer",
+    color: "var(--streak)",
+    xp: 30, gems: 8, threshold: 90,
+    unlockHint: "Complete Unit 4 first.",
+    questions: [
+      { q: "Kinetic energy of a 2 kg object at 4 m/s?", choices: ["8 J", "16 J", "32 J", "4 J"], answer: 1, explain: "KE = ½mv² = ½·2·16 = 16 J" },
+      { q: "If speed doubles, KE becomes…", choices: ["2×", "3×", "4×", "Same"], answer: 2, explain: "KE ∝ v²" },
+      { q: "Mass triples, speed same. KE becomes…", choices: ["Same", "2×", "3×", "9×"], answer: 2 },
+      { q: "Units of kinetic energy?", choices: ["N", "J", "W", "kg·m/s"], answer: 1 },
+      { q: "An object at rest has KE…", choices: ["Maximum", "Zero", "Negative", "Infinite"], answer: 1 },
+    ],
+  },
+  "energy-flow": {
+    name: "Energy Flow",
+    color: "var(--gem)",
+    xp: 32, gems: 9, threshold: 120,
+    unlockHint: "Complete Unit 5 first.",
+    questions: [
+      { q: "Work done by 10 N force over 3 m (same direction)?", choices: ["3 J", "13 J", "30 J", "0 J"], answer: 2, explain: "W = F·d = 30 J" },
+      { q: "Elastic collisions conserve…", choices: ["Only KE", "Only momentum", "Both KE and momentum", "Neither"], answer: 2 },
+      { q: "Power is…", choices: ["Energy × time", "Energy / time", "Force × mass", "Work × distance"], answer: 1, explain: "P = W/t" },
+      { q: "Unit of power is…", choices: ["Joule", "Newton", "Watt", "Pascal"], answer: 2 },
+      { q: "Energy can be…", choices: ["Created", "Destroyed", "Transformed", "All"], answer: 2, explain: "Conservation of energy." },
     ],
   },
 };

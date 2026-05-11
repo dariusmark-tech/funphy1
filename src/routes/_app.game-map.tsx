@@ -112,7 +112,7 @@ function GameMap() {
       </div>
 
       <p className="mt-4 text-center text-xs italic text-muted-foreground">
-        More units coming soon — clear all realms to unlock the Storyline Conclusion.
+        More units coming soon — clear more realms for unlock learning.
       </p>
     </div>
   );

@@ -8,10 +8,12 @@ export const Route = createFileRoute("/_app/mini-games")({
 });
 
 const GAMES = [
-  { slug: "vector-racer", name: "Vector Racer", color: "var(--neon)", to: "/vector-racer" as const, threshold: 0, unlockHint: "Always available" },
-  { slug: "force-builder", name: "Force Builder", color: "var(--cyan)", to: "/mini-game/force-builder" as const, threshold: 40, unlockHint: "Complete Unit 2 (score 40+)" },
-  { slug: "kinematics-jump", name: "Kinematics Jump", color: "var(--xp)", to: "/mini-game/kinematics-jump" as const, threshold: 80, unlockHint: "Complete Unit 3 (score 80+)" },
-  { slug: "momentum-crash", name: "Momentum Crash", color: "var(--streak)", to: "/mini-game/momentum-crash" as const, threshold: 120, unlockHint: "Complete Unit 4 (score 120+)" },
+  { slug: "vector-racer", name: "Frame of Reference", color: "var(--neon)", to: "/vector-racer" as const, threshold: 0, unlockHint: "Always available" },
+  { slug: "acceleration-adventure", name: "Acceleration Adventure", color: "var(--cyan)", to: "/mini-game/acceleration-adventure" as const, threshold: 30, unlockHint: "Complete Unit 2 (score 30+)" },
+  { slug: "momentum-crash", name: "Momentum Match", color: "var(--xp)", to: "/mini-game/momentum-crash" as const, threshold: 60, unlockHint: "Complete Unit 3 (score 60+)" },
+  { slug: "energy-transfer", name: "Energy Transfer", color: "var(--streak)", to: "/mini-game/energy-transfer" as const, threshold: 90, unlockHint: "Complete Unit 4 (score 90+)" },
+  { slug: "energy-flow", name: "Energy Flow", color: "var(--gem)", to: "/mini-game/energy-flow" as const, threshold: 120, unlockHint: "Complete Unit 5 (score 120+)" },
+  { slug: "force-builder", name: "Force Diagram Builder", color: "var(--heart)", to: "/mini-game/force-builder" as const, threshold: 150, unlockHint: "Complete Unit 6 (score 150+)" },
 ];
 
 function MiniGames() {
