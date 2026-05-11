@@ -20,7 +20,7 @@ export function AppHeader() {
           </span>
         </Link>
 
-        {user && profile && (
+        {user && profile && !isAdmin && (
           <div className="ml-auto flex items-center gap-1">
             <Chip color="var(--streak)"><Flame className="h-3 w-3" />{profile.streak}</Chip>
             <Chip color="var(--xp)"><Zap className="h-3 w-3" />{profile.xp}</Chip>
