@@ -178,15 +178,9 @@ function LessonReader() {
             </section>
           )}
 
-          {/* Lesson text */}
-          <section className="mt-5">
-            <div className="mb-2 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-primary">
-              <BookOpen className="h-3.5 w-3.5" /> Read
-            </div>
-            <article className="whitespace-pre-wrap rounded-2xl border border-border bg-card/60 p-5 text-sm leading-relaxed text-foreground/90">
-              {lesson.text_content || "Content coming soon."}
-            </article>
-          </section>
+          {/* Lesson text — paginated, swipeable */}
+          <ReadPager text={lesson.text_content || "Content coming soon."} />
+
 
           {/* Equations */}
           {equations.length > 0 && (
