@@ -17,6 +17,8 @@ function AdminSignupPage() {
   const nav = useNavigate();
   const [email, setEmail] = useState("");
   const [user, setUser] = useState("");
+  const [schoolId, setSchoolId] = useState("");
+  const [profCode, setProfCode] = useState("");
   const [pwd, setPwd] = useState("");
   const [pwd2, setPwd2] = useState("");
   const [code, setCode] = useState("");
@@ -32,7 +34,7 @@ function AdminSignupPage() {
         password: pwd,
         options: {
           emailRedirectTo: window.location.origin + "/admin",
-          data: { display_name: user },
+          data: { display_name: user, school_id: schoolId },
         },
       });
       if (error) throw error;
@@ -45,6 +47,8 @@ function AdminSignupPage() {
       }
       const { data: ok, error: rpcErr } = await supabase.rpc("grant_admin_role", {
         _invite_code: code,
+        _school_id: schoolId,
+        _professor_code: profCode,
       });
       if (rpcErr) throw rpcErr;
       if (!ok) {
@@ -83,6 +87,8 @@ function AdminSignupPage() {
         {[
           { label: "Email", v: email, set: setEmail, type: "email" },
           { label: "Username", v: user, set: setUser, type: "text" },
+          { label: "Prof School ID", v: schoolId, set: setSchoolId, type: "text" },
+          { label: "Professor Code (share with your students)", v: profCode, set: setProfCode, type: "text" },
           { label: "Password", v: pwd, set: setPwd, type: "password" },
           { label: "Re-enter Password", v: pwd2, set: setPwd2, type: "password" },
           { label: "Invite Code", v: code, set: setCode, type: "password" },
