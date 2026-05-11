@@ -1,10 +1,12 @@
 import { createFileRoute, useRouter, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useMutation } from "@tanstack/react-query";
+import { useState, useMemo, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { useRefreshProfile } from "@/hooks/use-profile";
 import {
   ChevronLeft,
+  ChevronRight,
   BookOpen,
   PlayCircle,
   Sigma,
