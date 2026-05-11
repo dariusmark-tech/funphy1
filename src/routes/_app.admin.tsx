@@ -18,7 +18,7 @@ export const Route = createFileRoute("/_app/admin")({
 
 function AdminLayout() {
   return (
-    <div className="light mx-auto min-h-screen max-w-md bg-white px-4 py-6 text-slate-900">
+    <div className="mx-auto min-h-screen max-w-md bg-background px-4 py-6 text-foreground">
       <p className="text-xs uppercase tracking-wider text-[var(--neon)]">Admin</p>
       <h1 className="text-2xl font-black">Welcome Admin</h1>
       <div className="mt-4">
