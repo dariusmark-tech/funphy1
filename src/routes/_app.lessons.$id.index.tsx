@@ -1,10 +1,12 @@
 import { createFileRoute, useRouter, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useMutation } from "@tanstack/react-query";
+import { useState, useMemo, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { useRefreshProfile } from "@/hooks/use-profile";
 import {
   ChevronLeft,
+  ChevronRight,
   BookOpen,
   PlayCircle,
   Sigma,
@@ -176,15 +178,9 @@ function LessonReader() {
             </section>
           )}
 
-          {/* Lesson text */}
-          <section className="mt-5">
-            <div className="mb-2 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-primary">
-              <BookOpen className="h-3.5 w-3.5" /> Read
-            </div>
-            <article className="whitespace-pre-wrap rounded-2xl border border-border bg-card/60 p-5 text-sm leading-relaxed text-foreground/90">
-              {lesson.text_content || "Content coming soon."}
-            </article>
-          </section>
+          {/* Lesson text — paginated, swipeable */}
+          <ReadPager text={lesson.text_content || "Content coming soon."} />
+
 
           {/* Equations */}
           {equations.length > 0 && (
@@ -272,3 +268,112 @@ function LessonReader() {
     </div>
   );
 }
+
+function ReadPager({ text }: { text: string }) {
+  // Split into paragraphs, group into pages so each page fits without inner scroll.
+  const pages = useMemo(() => {
+    const paras = text
+      .split(/\n\s*\n/)
+      .map((p) => p.trim())
+      .filter(Boolean);
+    if (paras.length === 0) return [text];
+
+    // Aim ~420 chars per page (~roughly fits the fixed-height card on mobile).
+    const TARGET = 420;
+    const out: string[] = [];
+    let buf = "";
+    for (const p of paras) {
+      if (!buf) {
+        buf = p;
+      } else if (buf.length + p.length + 2 <= TARGET) {
+        buf += "\n\n" + p;
+      } else {
+        out.push(buf);
+        buf = p;
+      }
+    }
+    if (buf) out.push(buf);
+    return out;
+  }, [text]);
+
+  const [page, setPage] = useState(0);
+  const total = pages.length;
+  const touchStartX = useRef<number | null>(null);
+
+  const go = (delta: number) => {
+    setPage((p) => Math.min(total - 1, Math.max(0, p + delta)));
+  };
+
+  return (
+    <section className="mt-5">
+      <div className="mb-2 flex items-center justify-between">
+        <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-primary">
+          <BookOpen className="h-3.5 w-3.5" /> Read
+        </div>
+        {total > 1 && (
+          <div className="text-[10px] font-semibold text-muted-foreground">
+            {page + 1} / {total}
+          </div>
+        )}
+      </div>
+
+      <div
+        className="relative overflow-hidden rounded-2xl border border-border bg-card/60"
+        onTouchStart={(e) => {
+          touchStartX.current = e.touches[0].clientX;
+        }}
+        onTouchEnd={(e) => {
+          if (touchStartX.current == null) return;
+          const dx = e.changedTouches[0].clientX - touchStartX.current;
+          if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1);
+          touchStartX.current = null;
+        }}
+      >
+        <article
+          key={page}
+          className="min-h-[340px] whitespace-pre-wrap p-5 text-sm leading-relaxed text-foreground/90 animate-in fade-in slide-in-from-right-2 duration-200"
+        >
+          {pages[page]}
+        </article>
+
+        {total > 1 && (
+          <div className="flex items-center justify-between border-t border-border/60 px-3 py-2">
+            <button
+              type="button"
+              onClick={() => go(-1)}
+              disabled={page === 0}
+              className="inline-flex items-center gap-1 rounded-full px-3 py-1.5 text-xs font-semibold text-foreground/80 transition-opacity disabled:opacity-30"
+              aria-label="Previous page"
+            >
+              <ChevronLeft className="h-3.5 w-3.5" /> Prev
+            </button>
+
+            <div className="flex items-center gap-1.5">
+              {pages.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setPage(i)}
+                  className={`h-1.5 rounded-full transition-all ${
+                    i === page ? "w-4 bg-primary" : "w-1.5 bg-muted"
+                  }`}
+                  aria-label={`Go to page ${i + 1}`}
+                />
+              ))}
+            </div>
+
+            <button
+              type="button"
+              onClick={() => go(1)}
+              disabled={page === total - 1}
+              className="inline-flex items-center gap-1 rounded-full px-3 py-1.5 text-xs font-semibold text-primary transition-opacity disabled:opacity-30"
+              aria-label="Next page"
+            >
+              Next <ChevronRight className="h-3.5 w-3.5" />
+            </button>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
