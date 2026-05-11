@@ -105,6 +105,15 @@ function AdminLoginPage() {
           className="mt-1.5 w-full rounded-full border border-slate-200 bg-slate-100 px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
         />
 
+        <label className="mt-4 block text-sm font-bold">Prof School ID</label>
+        <input
+          type="text"
+          required
+          value={schoolId}
+          onChange={(e) => setSchoolId(e.target.value)}
+          className="mt-1.5 w-full rounded-full border border-slate-200 bg-slate-100 px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+        />
+
         <button
           disabled={busy}
           className="mx-auto mt-6 block rounded-full border-2 border-primary bg-white px-10 py-2.5 font-bold text-primary hover:bg-primary hover:text-primary-foreground disabled:opacity-50"
