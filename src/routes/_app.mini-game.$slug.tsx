@@ -16,7 +16,7 @@ type Q = { q: string; choices: string[]; answer: number; explain?: string };
 
 const GAMES: Record<string, { name: string; color: string; xp: number; gems: number; threshold: number; unlockHint: string; questions: Q[] }> = {
   "force-builder": {
-    name: "Force Builder",
+    name: "Force Diagram Builder",
     color: "var(--cyan)",
     xp: 25, gems: 6, threshold: 40,
     unlockHint: "Complete Unit 2 first.",
