@@ -27,10 +27,13 @@ function LoginPage() {
   // signin
   const [siEmail, setSiEmail] = useState("");
   const [siPwd, setSiPwd] = useState("");
+  const [siSchool, setSiSchool] = useState("");
 
   // signup
   const [suEmail, setSuEmail] = useState("");
   const [suUser, setSuUser] = useState("");
+  const [suSchool, setSuSchool] = useState("");
+  const [suProfCode, setSuProfCode] = useState("");
   const [suPwd, setSuPwd] = useState("");
   const [suPwd2, setSuPwd2] = useState("");
   const [remember, setRemember] = useState(false);
@@ -39,8 +42,17 @@ function LoginPage() {
     e.preventDefault();
     setBusy(true);
     try {
-      const { error } = await supabase.auth.signInWithPassword({ email: siEmail, password: siPwd });
+      const { data, error } = await supabase.auth.signInWithPassword({ email: siEmail, password: siPwd });
       if (error) throw error;
+      const { data: prof } = await supabase
+        .from("profiles")
+        .select("school_id")
+        .eq("id", data.user.id)
+        .maybeSingle();
+      if (!prof || (prof.school_id ?? "").trim() !== siSchool.trim()) {
+        await supabase.auth.signOut();
+        throw new Error("School ID does not match this account.");
+      }
       nav({ to: "/dashboard" });
     } catch (err: any) {
       toast.error(err.message);
@@ -54,12 +66,26 @@ function LoginPage() {
     if (suPwd !== suPwd2) return toast.error("Passwords don't match");
     setBusy(true);
     try {
+      // Validate professor code exists
+      const code = suProfCode.trim();
+      if (code) {
+        const { data: prof } = await supabase
+          .from("profiles")
+          .select("id")
+          .eq("professor_code", code)
+          .maybeSingle();
+        if (!prof) throw new Error("Professor code not found. Ask your professor for the correct code.");
+      }
       const { error } = await supabase.auth.signUp({
         email: suEmail,
         password: suPwd,
         options: {
           emailRedirectTo: window.location.origin + "/dashboard",
-          data: { display_name: suUser },
+          data: {
+            display_name: suUser,
+            school_id: suSchool,
+            linked_professor_code: code || null,
+          },
         },
       });
       if (error) throw error;
