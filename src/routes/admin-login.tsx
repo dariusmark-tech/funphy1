@@ -29,6 +29,7 @@ function AdminLoginPage() {
   const nav = useNavigate();
   const [email, setEmail] = useState("");
   const [pwd, setPwd] = useState("");
+  const [schoolId, setSchoolId] = useState("");
   const [busy, setBusy] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
@@ -37,6 +38,15 @@ function AdminLoginPage() {
     try {
       const { data, error } = await supabase.auth.signInWithPassword({ email, password: pwd });
       if (error) throw new Error("Invalid admin credentials. Please try again.");
+      const { data: prof } = await supabase
+        .from("profiles")
+        .select("school_id")
+        .eq("id", data.user.id)
+        .maybeSingle();
+      if (!prof || (prof.school_id ?? "").trim() !== schoolId.trim()) {
+        await supabase.auth.signOut();
+        throw new Error("School ID does not match this account.");
+      }
       const { data: role } = await supabase
         .from("user_roles")
         .select("role")
