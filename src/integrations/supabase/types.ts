@@ -517,6 +517,7 @@ export type Database = {
         Returns: boolean
       }
       my_professor_code: { Args: never; Returns: string }
+      professor_code_exists: { Args: { _code: string }; Returns: boolean }
     }
     Enums: {
       app_role: "admin" | "student"
