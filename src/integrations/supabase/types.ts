@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      assignments: {
+        Row: {
+          created_at: string
+          created_by: string
+          deadline_date: string
+          id: string
+          professor_code: string
+          target_xp: number
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          deadline_date: string
+          id?: string
+          professor_code: string
+          target_xp?: number
+          title: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          deadline_date?: string
+          id?: string
+          professor_code?: string
+          target_xp?: number
+          title?: string
+        }
+        Relationships: []
+      }
       daily_quests: {
         Row: {
           active_date: string
