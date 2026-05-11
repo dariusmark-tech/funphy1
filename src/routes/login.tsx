@@ -240,6 +240,8 @@ function LoginPage() {
               {[
                 { label: "Email", v: suEmail, set: setSuEmail, type: "email" },
                 { label: "Username", v: suUser, set: setSuUser, type: "text" },
+                { label: "School ID", v: suSchool, set: setSuSchool, type: "text" },
+                { label: "Professor Code", v: suProfCode, set: setSuProfCode, type: "text" },
                 { label: "Password", v: suPwd, set: setSuPwd, type: "password" },
                 { label: "Re-enter Password", v: suPwd2, set: setSuPwd2, type: "password" },
               ].map((f) => (
