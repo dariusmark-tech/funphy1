@@ -27,10 +27,13 @@ function LoginPage() {
   // signin
   const [siEmail, setSiEmail] = useState("");
   const [siPwd, setSiPwd] = useState("");
+  const [siSchool, setSiSchool] = useState("");
 
   // signup
   const [suEmail, setSuEmail] = useState("");
   const [suUser, setSuUser] = useState("");
+  const [suSchool, setSuSchool] = useState("");
+  const [suProfCode, setSuProfCode] = useState("");
   const [suPwd, setSuPwd] = useState("");
   const [suPwd2, setSuPwd2] = useState("");
   const [remember, setRemember] = useState(false);
@@ -39,8 +42,17 @@ function LoginPage() {
     e.preventDefault();
     setBusy(true);
     try {
-      const { error } = await supabase.auth.signInWithPassword({ email: siEmail, password: siPwd });
+      const { data, error } = await supabase.auth.signInWithPassword({ email: siEmail, password: siPwd });
       if (error) throw error;
+      const { data: prof } = await supabase
+        .from("profiles")
+        .select("school_id")
+        .eq("id", data.user.id)
+        .maybeSingle();
+      if (!prof || (prof.school_id ?? "").trim() !== siSchool.trim()) {
+        await supabase.auth.signOut();
+        throw new Error("School ID does not match this account.");
+      }
       nav({ to: "/dashboard" });
     } catch (err: any) {
       toast.error(err.message);
@@ -54,12 +66,23 @@ function LoginPage() {
     if (suPwd !== suPwd2) return toast.error("Passwords don't match");
     setBusy(true);
     try {
+      // Validate professor code exists
+      const code = suProfCode.trim();
+      if (code) {
+        const { data: ok, error: rpcErr } = await supabase.rpc("professor_code_exists", { _code: code });
+        if (rpcErr) throw rpcErr;
+        if (!ok) throw new Error("Professor code not found. Ask your professor for the correct code.");
+      }
       const { error } = await supabase.auth.signUp({
         email: suEmail,
         password: suPwd,
         options: {
           emailRedirectTo: window.location.origin + "/dashboard",
-          data: { display_name: suUser },
+          data: {
+            display_name: suUser,
+            school_id: suSchool,
+            linked_professor_code: code || null,
+          },
         },
       });
       if (error) throw error;
@@ -158,6 +181,14 @@ function LoginPage() {
                 className="mt-1.5 w-full rounded-full border border-slate-200 bg-slate-100 px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/30"
               />
 
+              <label className="mt-4 block text-sm font-bold">School ID</label>
+              <input
+                type="text"
+                required
+                value={siSchool}
+                onChange={(e) => setSiSchool(e.target.value)}
+                className="mt-1.5 w-full rounded-full border border-slate-200 bg-slate-100 px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/30"
+              />
               <div className="mt-2 flex justify-end">
                 <button type="button" className="text-xs text-muted-foreground hover:text-primary">
                   Forgot Password?
@@ -209,6 +240,8 @@ function LoginPage() {
               {[
                 { label: "Email", v: suEmail, set: setSuEmail, type: "email" },
                 { label: "Username", v: suUser, set: setSuUser, type: "text" },
+                { label: "School ID", v: suSchool, set: setSuSchool, type: "text" },
+                { label: "Professor Code", v: suProfCode, set: setSuProfCode, type: "text" },
                 { label: "Password", v: suPwd, set: setSuPwd, type: "password" },
                 { label: "Re-enter Password", v: suPwd2, set: setSuPwd2, type: "password" },
               ].map((f) => (

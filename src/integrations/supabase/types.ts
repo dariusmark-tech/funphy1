@@ -185,9 +185,12 @@ export type Database = {
           last_active_date: string
           last_heart_at: string
           league: string
+          linked_professor_code: string | null
           max_streak: number
           physics_score: number
           placement_completed: boolean
+          professor_code: string | null
+          school_id: string | null
           streak: number
           updated_at: string
           xp: number
@@ -204,9 +207,12 @@ export type Database = {
           last_active_date?: string
           last_heart_at?: string
           league?: string
+          linked_professor_code?: string | null
           max_streak?: number
           physics_score?: number
           placement_completed?: boolean
+          professor_code?: string | null
+          school_id?: string | null
           streak?: number
           updated_at?: string
           xp?: number
@@ -223,9 +229,12 @@ export type Database = {
           last_active_date?: string
           last_heart_at?: string
           league?: string
+          linked_professor_code?: string | null
           max_streak?: number
           physics_score?: number
           placement_completed?: boolean
+          professor_code?: string | null
+          school_id?: string | null
           streak?: number
           updated_at?: string
           xp?: number
@@ -490,7 +499,16 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      grant_admin_role: { Args: { _invite_code: string }; Returns: boolean }
+      grant_admin_role:
+        | { Args: { _invite_code: string }; Returns: boolean }
+        | {
+            Args: {
+              _invite_code: string
+              _professor_code?: string
+              _school_id?: string
+            }
+            Returns: boolean
+          }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -498,6 +516,8 @@ export type Database = {
         }
         Returns: boolean
       }
+      my_professor_code: { Args: never; Returns: string }
+      professor_code_exists: { Args: { _code: string }; Returns: boolean }
     }
     Enums: {
       app_role: "admin" | "student"
