@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 import { Heart, Flame, Zap, Gem } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useProfile } from "@/hooks/use-profile";
@@ -7,6 +7,8 @@ import logo from "@/assets/funphy-logo.png";
 export function AppHeader() {
   const { user } = useAuth();
   const { data: profile } = useProfile();
+  const path = useRouterState({ select: (s) => s.location.pathname });
+  const isAdmin = path === "/admin" || path.startsWith("/admin/");
 
   return (
     <header className="sticky top-0 z-40 border-b border-border/60 bg-background/85 backdrop-blur-xl">
@@ -18,7 +20,7 @@ export function AppHeader() {
           </span>
         </Link>
 
-        {user && profile && (
+        {user && profile && !isAdmin && (
           <div className="ml-auto flex items-center gap-1">
             <Chip color="var(--streak)"><Flame className="h-3 w-3" />{profile.streak}</Chip>
             <Chip color="var(--xp)"><Zap className="h-3 w-3" />{profile.xp}</Chip>
