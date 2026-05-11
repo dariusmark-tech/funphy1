@@ -69,12 +69,9 @@ function LoginPage() {
       // Validate professor code exists
       const code = suProfCode.trim();
       if (code) {
-        const { data: prof } = await supabase
-          .from("profiles")
-          .select("id")
-          .eq("professor_code", code)
-          .maybeSingle();
-        if (!prof) throw new Error("Professor code not found. Ask your professor for the correct code.");
+        const { data: ok, error: rpcErr } = await supabase.rpc("professor_code_exists", { _code: code });
+        if (rpcErr) throw rpcErr;
+        if (!ok) throw new Error("Professor code not found. Ask your professor for the correct code.");
       }
       const { error } = await supabase.auth.signUp({
         email: suEmail,
