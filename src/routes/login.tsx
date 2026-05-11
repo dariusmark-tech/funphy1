@@ -95,7 +95,7 @@ function LoginPage() {
               <div className="mt-10 w-full space-y-3">
                 <button
                   onClick={() => setView("signin")}
-                  className="w-full rounded-full border-2 border-primary bg-background px-6 py-3.5 text-base font-bold text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
+                  className="w-full rounded-full border-2 border-primary bg-white px-6 py-3.5 text-base font-bold text-primary transition-colors hover:bg-primary hover:text-white"
                 >
                   Log In
                 </button>
@@ -166,7 +166,7 @@ function LoginPage() {
 
               <button
                 disabled={busy}
-                className="mx-auto mt-5 block rounded-full border-2 border-primary bg-background px-10 py-2.5 font-bold text-primary hover:bg-primary hover:text-primary-foreground disabled:opacity-50"
+                className="mx-auto mt-5 block rounded-full border-2 border-primary bg-white px-10 py-2.5 font-bold text-primary hover:bg-primary hover:text-white disabled:opacity-50"
               >
                 {busy ? "..." : "Log In"}
               </button>
