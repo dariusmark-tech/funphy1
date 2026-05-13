@@ -56,6 +56,11 @@ const GAMES: Record<string, { name: string; color: string; xp: number; gems: num
     color: "var(--xp)",
     xp: 35, gems: 10, threshold: 60,
     unlockHint: "Complete Unit 3 first.",
+    realWorld: {
+      title: "Billiards / pool table",
+      story: "When the cue ball strikes another ball, momentum transfers between them. The total momentum before and after the hit stays the same — that's why a fast cue can stop dead while sending the target ball flying.",
+      takeaway: "Momentum (p = m·v) is conserved in collisions — used in car crash safety, rockets, and sports.",
+    },
     questions: [
       { q: "A 2 kg ball at 3 m/s. Momentum?", choices: ["1.5 kg·m/s", "3 kg·m/s", "6 kg·m/s", "9 kg·m/s"], answer: 2, explain: "p = mv = 6" },
       { q: "Inelastic collision: 2 kg @ 4 m/s hits 2 kg at rest, they stick. Final v?", choices: ["1 m/s", "2 m/s", "4 m/s", "8 m/s"], answer: 1, explain: "Conservation: 2·4 = 4·v → v = 2" },
