@@ -258,6 +258,21 @@ function MiniGame() {
             <p className="mt-3 rounded-lg bg-muted/40 p-2 text-xs text-muted-foreground">{current.explain}</p>
           )}
         </motion.div>
+      )}
+
+      {!done && (
+        <div className="mt-4 rounded-2xl border border-border bg-card/60 p-4">
+          <div className="flex items-center gap-2">
+            <Lightbulb className="h-4 w-4" style={{ color: game.color }} />
+            <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Real-World Example</p>
+          </div>
+          <p className="mt-2 text-sm font-bold">{game.realWorld.title}</p>
+          <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{game.realWorld.story}</p>
+          <p className="mt-2 text-xs italic" style={{ color: game.color }}>💡 {game.realWorld.takeaway}</p>
+        </div>
+      )}
+
+      {done && (
       ) : (
         <div className="mt-6 rounded-2xl border border-border bg-card p-6 text-center">
           <Trophy className="mx-auto h-10 w-10 text-[var(--xp)]" />
