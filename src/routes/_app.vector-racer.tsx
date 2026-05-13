@@ -172,6 +172,18 @@ function VectorRacer() {
           <p className="text-muted-foreground">You scored {score}.</p>
         </div>
       )}
+
+      <div className="mt-4 rounded-2xl border border-border bg-card/60 p-4">
+        <div className="flex items-center gap-2">
+          <Lightbulb className="h-4 w-4 text-primary" />
+          <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Real-World Example</p>
+        </div>
+        <p className="mt-2 text-sm font-bold">Riding in a moving train</p>
+        <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+          When you sit in a moving train and toss a coin straight up, it lands back in your hand — from your frame of reference, it goes straight up and down. But to someone standing on the platform, the coin actually travels in an arc, because they see it moving forward with the train too.
+        </p>
+        <p className="mt-2 text-xs italic text-primary">💡 Motion depends on the observer's frame of reference — the same event can look different to different viewers.</p>
+      </div>
     </div>
   );
 }
