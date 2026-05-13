@@ -1,59 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Gamepad2, Lock, Lightbulb, Car, Zap as ZapIcon, Bike, Circle } from "lucide-react";
+import { Gamepad2, Lock } from "lucide-react";
 import { useProfile } from "@/hooks/use-profile";
 import { toast } from "sonner";
-
-const REAL_WORLD = [
-  {
-    title: "Acceleration",
-    icon: Car,
-    color: "var(--cyan)",
-    scenario: "Pressing the gas pedal when the light turns green.",
-    points: [
-      "A light sports car (less mass) accelerates much faster.",
-      "A heavily loaded truck (more mass) accelerates more slowly.",
-      "Stepping harder on the gas (more force) makes either vehicle accelerate faster.",
-    ],
-    takeaway: "Newton's Second Law in action — acceleration depends on both force and mass.",
-  },
-  {
-    title: "Force",
-    icon: ZapIcon,
-    color: "var(--heart)",
-    scenario: "Kicking a soccer ball.",
-    points: [
-      "A soft kick (small force) makes the ball move slowly.",
-      "A powerful kick (large force) makes it move faster and farther.",
-      "Kicking from a different direction sends the ball that way.",
-    ],
-    takeaway: "Force is a push or pull that changes an object's speed, direction, or shape.",
-  },
-  {
-    title: "Kinematics",
-    icon: Bike,
-    color: "var(--neon)",
-    scenario: "Riding a bicycle to school.",
-    points: [
-      "Position changes as you move from home to school.",
-      "Velocity tells how fast you go (e.g., 20 km/h).",
-      "Speeding up or slowing down changes your acceleration.",
-      "Distance = Speed × Time.",
-    ],
-    takeaway: "Kinematics describes motion — position, velocity, acceleration, time — without forces.",
-  },
-  {
-    title: "Momentum",
-    icon: Circle,
-    color: "var(--xp)",
-    scenario: "Playing billiards or pool.",
-    points: [
-      "A heavier or faster ball has more momentum.",
-      "A fast cue ball transfers momentum to a stationary ball.",
-      "Equal-mass balls colliding head-on often swap velocities.",
-    ],
-    takeaway: "Momentum = mass × velocity. More mass or speed makes objects harder to stop.",
-  },
-];
 
 export const Route = createFileRoute("/_app/mini-games")({
   component: MiniGames,
@@ -112,49 +60,6 @@ function MiniGames() {
             </button>
           );
         })}
-      </div>
-
-      <div className="mt-8">
-        <div className="flex items-center gap-2">
-          <Lightbulb className="h-4 w-4 text-[var(--neon)]" />
-          <h2 className="text-lg font-black">Real-World Examples</h2>
-        </div>
-        <p className="text-xs text-muted-foreground">See the physics behind each game in everyday life.</p>
-
-        <div className="mt-3 space-y-3">
-          {REAL_WORLD.map((ex) => {
-            const Icon = ex.icon;
-            return (
-              <div
-                key={ex.title}
-                className="glass rounded-2xl p-4"
-                style={{ boxShadow: `inset 0 0 0 1px ${ex.color}44` }}
-              >
-                <div className="flex items-center gap-3">
-                  <div
-                    className="grid h-10 w-10 place-items-center rounded-full"
-                    style={{ background: `${ex.color}22`, border: `1px solid ${ex.color}55` }}
-                  >
-                    <Icon className="h-5 w-5" style={{ color: ex.color }} />
-                  </div>
-                  <div>
-                    <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Real-World Example</div>
-                    <div className="text-sm font-bold">{ex.title}</div>
-                  </div>
-                </div>
-                <p className="mt-3 text-sm italic text-foreground/90">{ex.scenario}</p>
-                <ul className="mt-2 list-disc space-y-1 pl-5 text-xs text-muted-foreground">
-                  {ex.points.map((p, i) => (
-                    <li key={i}>{p}</li>
-                  ))}
-                </ul>
-                <p className="mt-3 text-xs font-semibold" style={{ color: ex.color }}>
-                  {ex.takeaway}
-                </p>
-              </div>
-            );
-          })}
-        </div>
       </div>
     </div>
   );
