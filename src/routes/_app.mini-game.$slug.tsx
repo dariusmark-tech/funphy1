@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useState, useMemo } from "react";
-import { ChevronLeft, Heart, RotateCw, Trophy, Zap, Gem, CheckCircle2, XCircle } from "lucide-react";
+import { ChevronLeft, Heart, RotateCw, Trophy, Zap, Gem, CheckCircle2, XCircle, Lightbulb } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useProfile, useRefreshProfile } from "@/hooks/use-profile";
 import { useSettings } from "@/hooks/use-settings";
