@@ -92,6 +92,11 @@ const GAMES: Record<string, { name: string; color: string; xp: number; gems: num
     color: "var(--streak)",
     xp: 30, gems: 8, threshold: 90,
     unlockHint: "Complete Unit 4 first.",
+    realWorld: {
+      title: "A roller coaster drop",
+      story: "At the top of the hill the coaster has stored (potential) energy. As it drops, that energy converts into kinetic energy — speed. Friction and air drag turn a bit into heat and sound.",
+      takeaway: "Energy is never lost — it just changes form. KE = ½mv² powers everything from cars to wind turbines.",
+    },
     questions: [
       { q: "Kinetic energy of a 2 kg object at 4 m/s?", choices: ["8 J", "16 J", "32 J", "4 J"], answer: 1, explain: "KE = ½mv² = ½·2·16 = 16 J" },
       { q: "If speed doubles, KE becomes…", choices: ["2×", "3×", "4×", "Same"], answer: 2, explain: "KE ∝ v²" },
