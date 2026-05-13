@@ -38,6 +38,11 @@ const GAMES: Record<string, { name: string; color: string; xp: number; gems: num
     color: "var(--xp)",
     xp: 30, gems: 8, threshold: 80,
     unlockHint: "Complete Unit 3 first.",
+    realWorld: {
+      title: "Riding a bike to school",
+      story: "Your speed, the time you ride, and how quickly you accelerate from a stop sign all describe motion. Coasting downhill, gravity adds acceleration even without pedaling.",
+      takeaway: "Kinematics tells you where you'll be and how fast — used by GPS, cars, and roller coasters.",
+    },
     questions: [
       { q: "v = 10 m/s, t = 2 s, a = 0. What is displacement?", choices: ["5 m", "10 m", "20 m", "40 m"], answer: 2, explain: "d = vt = 20 m" },
       { q: "Object starts at rest, a = 3 m/s². Velocity after 4 s?", choices: ["7 m/s", "12 m/s", "0.75 m/s", "3 m/s"], answer: 1, explain: "v = at = 12 m/s" },
