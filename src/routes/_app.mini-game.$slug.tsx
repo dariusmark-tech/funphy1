@@ -14,7 +14,7 @@ export const Route = createFileRoute("/_app/mini-game/$slug")({
 
 type Q = { q: string; choices: string[]; answer: number; explain?: string };
 
-const GAMES: Record<string, { name: string; color: string; xp: number; gems: number; threshold: number; unlockHint: string; questions: Q[] }> = {
+const GAMES: Record<string, { name: string; color: string; xp: number; gems: number; threshold: number; unlockHint: string; realWorld: { title: string; story: string; takeaway: string }; questions: Q[] }> = {
   "force-builder": {
     name: "Force Diagram Builder",
     color: "var(--cyan)",
