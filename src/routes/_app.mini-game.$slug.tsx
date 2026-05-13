@@ -110,6 +110,11 @@ const GAMES: Record<string, { name: string; color: string; xp: number; gems: num
     color: "var(--gem)",
     xp: 32, gems: 9, threshold: 120,
     unlockHint: "Complete Unit 5 first.",
+    realWorld: {
+      title: "Charging your phone",
+      story: "Electrical energy from the wall flows into your battery (chemical energy), then into the screen as light and into the speaker as sound. Power (watts) measures how fast that energy moves.",
+      takeaway: "Power = work ÷ time. Higher wattage charges faster — same physics, different scale, from light bulbs to power plants.",
+    },
     questions: [
       { q: "Work done by 10 N force over 3 m (same direction)?", choices: ["3 J", "13 J", "30 J", "0 J"], answer: 2, explain: "W = F·d = 30 J" },
       { q: "Elastic collisions conserve…", choices: ["Only KE", "Only momentum", "Both KE and momentum", "Neither"], answer: 2 },
