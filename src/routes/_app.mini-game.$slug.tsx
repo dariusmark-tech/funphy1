@@ -273,7 +273,6 @@ function MiniGame() {
       )}
 
       {done && (
-      ) : (
         <div className="mt-6 rounded-2xl border border-border bg-card p-6 text-center">
           <Trophy className="mx-auto h-10 w-10 text-[var(--xp)]" />
           <p className="mt-2 text-lg font-black">Game Complete!</p>
