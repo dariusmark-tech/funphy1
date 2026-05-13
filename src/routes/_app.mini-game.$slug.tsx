@@ -231,7 +231,7 @@ function MiniGame() {
       <h1 className="mt-2 text-2xl font-black" style={{ color: game.color }}>{game.name}</h1>
       <p className="text-xs text-muted-foreground">Round {Math.min(step + 1, game.questions.length)} of {game.questions.length} · Score {score}</p>
 
-      {!done ? (
+      {!done && (
         <motion.div key={step} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-4 rounded-2xl border border-border bg-card p-5">
           <p className="text-base font-bold">{current.q}</p>
           <div className="mt-4 grid gap-2">
