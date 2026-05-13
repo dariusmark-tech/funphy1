@@ -74,6 +74,11 @@ const GAMES: Record<string, { name: string; color: string; xp: number; gems: num
     color: "var(--cyan)",
     xp: 25, gems: 6, threshold: 30,
     unlockHint: "Complete Unit 2 first.",
+    realWorld: {
+      title: "Stepping on the gas pedal",
+      story: "When a car goes from 0 to 60 km/h, it's accelerating. Press harder, the change in velocity per second goes up. Brake hard and you decelerate — the same idea, just negative.",
+      takeaway: "Acceleration = change in velocity ÷ time. It's what your body feels as a 'push' in any moving vehicle.",
+    },
     questions: [
       { q: "Velocity changes from 0 to 20 m/s in 5 s. Acceleration?", choices: ["2 m/s²", "4 m/s²", "5 m/s²", "100 m/s²"], answer: 1, explain: "a = Δv/Δt = 20/5 = 4" },
       { q: "Object at 30 m/s decelerates at 5 m/s². Time to stop?", choices: ["3 s", "5 s", "6 s", "15 s"], answer: 2, explain: "t = v/a = 30/5 = 6 s" },
