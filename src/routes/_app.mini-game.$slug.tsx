@@ -20,6 +20,11 @@ const GAMES: Record<string, { name: string; color: string; xp: number; gems: num
     color: "var(--cyan)",
     xp: 35, gems: 10, threshold: 150,
     unlockHint: "Complete Unit 6 first.",
+    realWorld: {
+      title: "Pushing a shopping cart",
+      story: "When you push a cart, the harder you push (force) and the lighter the cart (mass), the faster it speeds up — that's Newton's Second Law in action at the grocery store.",
+      takeaway: "F = m × a — every push you feel in real life follows this rule.",
+    },
     questions: [
       { q: "A 5 kg box accelerates at 2 m/s². What net force is acting on it?", choices: ["2.5 N", "5 N", "10 N", "25 N"], answer: 2, explain: "F = ma = 5·2 = 10 N" },
       { q: "Two forces, 3 N right and 4 N up, are perpendicular. What is the net force magnitude?", choices: ["1 N", "5 N", "7 N", "12 N"], answer: 1, explain: "√(3²+4²) = 5 N" },
