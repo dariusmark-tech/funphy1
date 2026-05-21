@@ -49,7 +49,12 @@ function LoginPage() {
         .select("school_id")
         .eq("id", data.user.id)
         .maybeSingle();
-      if (!prof || (prof.school_id ?? "").trim() !== siSchool.trim()) {
+      // Only enforce school ID match when the profile already has one saved
+      // AND the user entered one. Otherwise allow sign-in (profile may still
+      // be initializing right after signup).
+      const savedSchool = (prof?.school_id ?? "").trim();
+      const enteredSchool = siSchool.trim();
+      if (savedSchool && enteredSchool && savedSchool !== enteredSchool) {
         await supabase.auth.signOut();
         throw new Error("School ID does not match this account.");
       }
